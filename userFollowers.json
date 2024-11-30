@@ -930,7 +930,10 @@
       "@My_Tanner"
     ]
   },
-  "@dnoriegas": { "username": "@dnoriegas", "followers": [] },
+  "@dnoriegas": {
+    "username": "@dnoriegas",
+    "followers": []
+  },
   "@OffTheChainJobs": {
     "username": "@OffTheChainJobs",
     "followers": [
@@ -3155,6 +3158,23 @@
       "@etnow",
       "@ZhantaoW95273",
       "@0b101010101"
+    ]
+  },
+  "@BlockchainRio": {
+    "username": "@BlockchainRio",
+    "followers": [
+      "@elonmusk",
+      "@NASA",
+      "@PhysicsToday",
+      "@mesqluis",
+      "@fgta00",
+      "@dabliore2",
+      "@gksaabnft",
+      "@goldenglobes",
+      "@elonmusk",
+      "@Jessica15428693",
+      "@etnow",
+      "@josiasfranca"
     ]
   }
 }

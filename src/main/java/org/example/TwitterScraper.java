@@ -1,6 +1,7 @@
 package org.example;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
@@ -302,7 +303,7 @@ public class TwitterScraper {
             return ;
         }
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.err.println("Preparing to get Followers...");
 
         final String crawlUsersFile = "users.json";
@@ -409,7 +410,7 @@ public class TwitterScraper {
     public void getUserSearch(int maxUsers, boolean hasCrawl) throws InterruptedException {
         System.out.println("Get users...");
         Set<String> users = new HashSet<>();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         final String crawlUsersFile = "users.json";
         if (hasCrawl) {
             try {
