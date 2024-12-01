@@ -16,12 +16,12 @@ import java.sql.Driver;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Scroller {
-    int currentPosition = 0;
-    int lastPosition = 0;
-    boolean scrolling;
-    int scrollingCount = 0;
-    WebDriver driver;
-    JavascriptExecutor js;
+    private int currentPosition = 0;
+    private int lastPosition = 0;
+    private boolean scrolling;
+    private int scrollingCount = 0;
+    private WebDriver driver;
+    private JavascriptExecutor js;
 
     Scroller(WebDriver driver) {
         this.driver = driver;

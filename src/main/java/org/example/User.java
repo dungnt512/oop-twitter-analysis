@@ -15,9 +15,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    String username;
+    private String username;
+    private List<String> followers = new ArrayList<>();
+    private List<String> following = new ArrayList<>();
+
     User(String username) {
         this.username = username;
     }
-    List<String> followers = new ArrayList<>();
 }

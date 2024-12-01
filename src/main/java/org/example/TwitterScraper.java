@@ -71,7 +71,7 @@ public class TwitterScraper {
         return driver;
     }
 
-    public void login() throws InterruptedException {
+    public boolean login() throws InterruptedException {
         System.out.println("Logging In...");
         try {
             driver.manage().window().maximize();
@@ -100,7 +100,9 @@ public class TwitterScraper {
         }
         catch (Exception e) {
             System.out.println("\nLogin failed!\n");
+            return false;
         }
+        return true;
     }
 
     private void inputUsername() throws InterruptedException {
@@ -213,7 +215,7 @@ public class TwitterScraper {
         driver.get(url);
     }
 
-    private Set<String> getUsers(int maxUsers, int delayMillis) throws InterruptedException {
+    private Set<String> getUsers(int maxUsers, int delayMillis, int retryLimit) throws InterruptedException {
         Set<String> users = new HashSet<>();
 
         int countRetry = 0, countEmpty = 0, countRefresh = 0;
@@ -221,8 +223,11 @@ public class TwitterScraper {
         if (maxUsers == 0) {
             maxUsers = 3000;
         }
-
+        if (retryLimit == 0) {
+            retryLimit = 20;
+        }
         Progress progress = new Progress("get username", maxUsers);
+
         while (users.size() < maxUsers) {
             try {
                 List<WebElement> local = driver.findElements(By.xpath("//div[@class='css-175oi2r']//a//div//div//span[contains(text(),'@')]"));
@@ -244,7 +249,7 @@ public class TwitterScraper {
                             scroller.scrollToElement(people);
                             int n = users.size();
                             progress.update(n);
-                            Thread.sleep(150);
+                            Thread.sleep(200);
                         }
                     }
                     catch (Exception e) {
@@ -254,9 +259,9 @@ public class TwitterScraper {
 
                 if (added == 0) {
                     try {
-                        while (countRetry < 20) {
+                        while (countRetry < retryLimit) {
                             WebElement retryButton = driver.findElement(By.xpath("//span[text()='Retry']/../../.."));
-                            System.err.println("Trying to Retry in " + (20 - countRetry) + " minutes...");
+                            System.err.println("Trying to Retry in " + (retryLimit - countRetry) + " minutes...");
                             Thread.sleep(57000);
                             retryButton.click();
                             countRetry++;
@@ -349,11 +354,11 @@ public class TwitterScraper {
             User user1 = new User(user);
             goToFollowers(user, "verified_followers");
             Thread.sleep(3000);
-            users = getUsers(200, 600);
+            users = getUsers(200, 600, -1);
             user1.getFollowers().addAll(users);
             goToFollowers(user, "followers");
             Thread.sleep(3000);
-            users = getUsers(200, 600);
+            users = getUsers(200, 600, -1);
             user1.getFollowers().addAll(users);
             allUsers.put(user, user1);
 
@@ -375,22 +380,22 @@ public class TwitterScraper {
                 break;
             }
         }
-        counter = 0;
-        for (String user : users) {
-            goToFollowers(user, "following");
-            users = getUsers(0, 700);
-            for (String temp : users) {
-                if (!allUsers.containsKey(temp)) {
-                    continue;
-                }
-                User user1 = allUsers.get(temp);
-                user1.getFollowers().add(user);
-            }
-            counter++;
-            if (counter >= limit) {
-                break;
-            }
-        }
+//        counter = 0;
+//        for (String user : users) {
+//            goToFollowers(user, "following");
+//            users = getUsers(0, 700, -1);
+//            for (String temp : users) {
+//                if (!allUsers.containsKey(temp)) {
+//                    continue;
+//                }
+//                User user1 = allUsers.get(temp);
+//                user1.getFollowers().add(user);
+//            }
+//            counter++;
+//            if (counter >= limit) {
+//                break;
+//            }
+//        }
 
         try {
             PrintWriter out = new PrintWriter(crawlUserFollowersFile);
@@ -427,7 +432,7 @@ public class TwitterScraper {
         }
         System.out.println();
 
-        users = getUsers(maxUsers, 1000);
+        users = getUsers(maxUsers, 1000, 0);
 
         try {
             PrintWriter out = new PrintWriter(crawlUsersFile);

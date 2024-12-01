@@ -22,6 +22,7 @@ public class Main {
 //        proxyList.add("52.35.240.119:1080");
 //
 //        proxyList.add("148.72.165.184:10501");
+
         Gson gson = new Gson();
         final String userAccountFile = "userAccount.json";
         Account account;
@@ -35,28 +36,31 @@ public class Main {
         }
 
         for (String proxy : proxyList) {
-            TwitterScraper scraper = new TwitterScraper(account.mail, account.username, account.password, proxy, false);
-            scraper.login();
+            TwitterScraper scraper = new TwitterScraper(account.getMail(),
+                    account.getUsername(), account.getPassword(), proxy, true);
+            if (!scraper.login()) {
+                continue;
+            }
 
-//        Thread.sleep(3000);
-//        scraper.goToSearch("blockchain", "people");
-//        Thread.sleep(3000);
-//        scraper.getUserSearch(2000, true);
+//            Thread.sleep(3000);
+//            scraper.goToSearch("blockchain", "people");
+//            Thread.sleep(3000);
+//            scraper.getUserSearch(5000, true);
 
             Thread.sleep(3000);
             scraper.getFollowers("all", 0);
-//        final String crawlUserFollowersFile = "userFollowers.json";
+            final String crawlUserFollowersFile = "userFollowers.json";
 //
-//        Gson gson = new Gson();
-//        try {
-//            Type mapType = new TypeToken<Map<String, User>>(){}.getType();
-//            JsonReader reader = new JsonReader(new FileReader(crawlUserFollowersFile));
-//            Map<String, User> allUsers = gson.fromJson(reader, mapType);
-//            System.out.println(allUsers.size());
-//        }
-//        catch (Exception e) {
-//            System.err.println("Import '" + crawlUserFollowersFile + "' error!");
-//        }
+//            Gson gson = new Gson();
+//            try {
+//                Type mapType = new TypeToken<Map<String, User>>() {
+//                }.getType();
+//                JsonReader reader = new JsonReader(new FileReader(crawlUserFollowersFile));
+//                Map<String, User> allUsers = gson.fromJson(reader, mapType);
+//                System.out.println(allUsers.size());
+//            } catch (Exception e) {
+//                System.err.println("Import '" + crawlUserFollowersFile + "' error!");
+//            }
         }
 
     }
