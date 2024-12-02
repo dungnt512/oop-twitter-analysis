@@ -1,4 +1,4 @@
-package org.example;
+package twitter.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

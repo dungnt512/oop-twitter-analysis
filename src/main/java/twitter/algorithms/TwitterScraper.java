@@ -1,4 +1,4 @@
-package org.example;
+package twitter.algorithms;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,10 +12,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import twitter.entity.Progress;
+import twitter.entity.Scroller;
+import twitter.entity.User;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -34,7 +36,7 @@ public class TwitterScraper {
     private Scroller scroller;
     private Actions actions;
 
-    TwitterScraper(String mail, String username, String password, String proxy, boolean headless) throws InterruptedException {
+    public TwitterScraper(String mail, String username, String password, String proxy, boolean headless) throws InterruptedException {
         this.mail = mail;
         this.username = username;
         this.password = password;
@@ -43,8 +45,7 @@ public class TwitterScraper {
         actions = new Actions(driver);
     }
 
-    private WebDriver initializeDriver(String proxyAddress, boolean headless) {
-        System.out.println("Initialize WebDriver...");
+    private ChromeOptions getChromeOptions(String proxyAddress, boolean headless) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-dev-shm-usage", "--ignore-certificate-error",
                 "--disable-gpu", "--log-level-3", "--disable-notifications", "--disable-popup-blocking",
@@ -59,6 +60,11 @@ public class TwitterScraper {
         if (headless) {
             options.addArguments("--headless");
         }
+        return options;
+    }
+    private WebDriver initializeDriver(String proxyAddress, boolean headless) {
+        System.out.println("Initialize WebDriver...");
+        ChromeOptions options = getChromeOptions(proxyAddress, headless);
         try {
             System.out.println("Initialize ChromeDriver...");
             driver = new ChromeDriver(options);
@@ -215,6 +221,7 @@ public class TwitterScraper {
         driver.get(url);
     }
 
+    @SuppressWarnings("BusyWait")
     private Set<String> getUsers(int maxUsers, int delayMillis, int retryLimit) throws InterruptedException {
         Set<String> users = new HashSet<>();
 

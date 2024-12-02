@@ -1,4 +1,4 @@
-package org.example;
+package twitter.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -19,7 +17,7 @@ public class User {
     private List<String> followers = new ArrayList<>();
     private List<String> following = new ArrayList<>();
 
-    User(String username) {
+    public User(String username) {
         this.username = username;
     }
 }

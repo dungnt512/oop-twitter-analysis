@@ -1,4 +1,4 @@
-package org.example;
+package twitter.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,8 @@ public class Tweet {
     private boolean isAd, extHoverCard, extUserId, extFollowing, extFollowers;
     private int hoverAttempt;
 
-    Tweet(WebDriver card, WebDriver driver, Actions actions, boolean scrapePosterDetails) throws InterruptedException {
+    @SuppressWarnings("BusyWait")
+    public Tweet(WebDriver card, WebDriver driver, Actions actions, boolean scrapePosterDetails) throws InterruptedException {
         this.card = card;
         this.error = false;
         try {

@@ -1,15 +1,14 @@
-package org.example;
+package twitter;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import lombok.Getter;
 import lombok.Setter;
+import twitter.algorithms.TwitterScraper;
+import twitter.entity.Account;
 
 import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
