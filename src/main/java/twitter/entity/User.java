@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User extends TweetObject {
     private String username;
+    private String userLink;
     private int tweetsCount = 0;
     private int followersCount = 0;
     private int followingCount = 0;
@@ -25,5 +26,16 @@ public class User extends TweetObject {
     public User(String username) {
         this.typeName = "user";
         this.username = username;
+    }
+    public User(String userLink, boolean isLink) {
+        this.typeName = "user";
+        if (!isLink) {
+            this.username = userLink;
+        }
+        else {
+            this.userLink = userLink;
+            String[] splits = userLink.split("/");
+            this.username = splits[splits.length - 1];
+        }
     }
 }
