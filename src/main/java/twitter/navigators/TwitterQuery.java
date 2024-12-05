@@ -1,0 +1,58 @@
+package twitter.navigators;
+
+import org.openqa.selenium.WebDriver;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class TwitterQuery implements SiteQuery {
+    private final String TWITTER_HOME_PAGE = "https://x.com/";
+    private WebDriver driver;
+
+    public void goToHome() {
+        driver.get(TWITTER_HOME_PAGE);
+    }
+
+    public static final String SEARCH_LATEST    = "live";
+    public static final String SEARCH_PEOPLE    = "user";
+    public static final String SEARCH_MEDIA     = "media";
+    public static final String SEARCH_LISTS     = "list";
+
+    public void goToSearch(String query, String tab, boolean isHashTag) {
+        if (query == null || query.isEmpty()) {
+            System.err.println("Query is not set!");
+            return ;
+        }
+        System.out.println("Query '" + (isHashTag ? "#" : "") + query + "' in tab '" + tab + "'...");
+        String url = !isHashTag ?
+                TWITTER_HOME_PAGE + "search?q=" + query + "&src=typed_query" :
+                TWITTER_HOME_PAGE + "hashtag/" + query  ;
+        if (!tab.isEmpty()) {
+            url += (isHashTag ? "?f=" : "&f=") + tab;
+        }
+        driver.get(url);
+    }
+
+    public static final String USER_VERIFIED_FOLLOWERS  = "verified_followers";
+    public static final String USER_FOLLOWERS           = "followers";
+    public static final String USER_FOLLOWING           = "following";
+    public static final String USER_REPLIES             = "with_replies";
+    public static final String USER_AFFILIATES          = "affiliates";
+
+    public void goToUser(String query, String tab) {
+        if (query == null || query.isEmpty()) {
+            System.err.println("Query is not set!");
+            return ;
+        }
+        System.out.println("Get users of '" + query + "' in tab '" + tab + "'...");
+        String url = TWITTER_HOME_PAGE + query + '/' + tab;
+        driver.get(url);
+    }
+
+    public void goToUserSearch(String query, String search) {
+
+    }
+}

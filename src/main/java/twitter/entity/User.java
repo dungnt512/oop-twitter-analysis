@@ -12,12 +12,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends TweetObject {
     private String username;
+    private int tweetsCount = 0;
+    private int followersCount = 0;
+    private int followingCount = 0;
+    private int likesCount = 0;
     private List<String> followers = new ArrayList<>();
     private List<String> following = new ArrayList<>();
+    private List<Tweet> tweets = new ArrayList<>();
 
     public User(String username) {
+        this.typeName = "user";
         this.username = username;
     }
 }
