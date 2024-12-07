@@ -1,38 +1,39 @@
 package twitter.algorithms;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import twitter.controller.JsonFileManager;
 import twitter.entity.ProgressPrinter;
 import twitter.entity.User;
+import twitter.navigators.SiteQuery;
+import twitter.navigators.SiteScroller;
 import twitter.navigators.TwitterQuery;
 
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class TwitterUserScraper extends Scraper {
-    private final String DATA_ROOT_DIR = "data/";
+    private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
+    private final String USER_IDS_SCRAPE_BACKUP_FILE = DATA_ROOT_DIR + "userIds_tmp.json";
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
     private final String USER_FOLLOWERS_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowers.json";
     private final String USER_FOLLOWING_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowing.json";
 
-    @SuppressWarnings("BusyWait")
-    private Set<String> getUsers(int maxUsers, int delayMillis, int retryLimit) throws InterruptedException {
-        Set<String> users = new HashSet<>();
+    TwitterUserScraper(WebDriver driver, SiteScroller siteScroller, SiteQuery siteQuery) {
+        super(driver, siteScroller, siteQuery);
+    }
 
+
+    @SuppressWarnings({"BusyWait"})
+    private Set<String> getUsers(int maxUsers, int delayMillis, int retryLimit, String saveFile) throws InterruptedException {
+        Set<String> users = new HashSet<>();
         int countRetry = 0, countEmpty = 0, countRefresh = 0;
 //        for (int iter = 0; iter < numberOfScroll; iter++)
         if (maxUsers == 0) {
@@ -45,18 +46,31 @@ public class TwitterUserScraper extends Scraper {
 
         while (users.size() < maxUsers) {
             try {
-                List<WebElement> local = driver.findElements(By.xpath("//div[@class='css-175oi2r']//a//div//div//span[contains(text(),'@')]"));
+                List<WebElement> local = driver.findElements(By.xpath("//button[@data-testid='UserCell']"));
                 int m = local.size(), added = 0;
+//                System.err.print(m + " ");
+//                if (m > 1 && local.get(0) != local.get(1)) System.err.print("? ");
                 for (int i = Math.max(0, m - 40); i < m; i++) {
                     try {
                         WebElement people = local.get(i);
-                        String user;
+                        String user = "";
                         try {
-                            user = people.getText();
-//                            user = user.substring(user.indexOf('@'));
-                        }
-                        catch (Exception e) {
-                            continue;
+                            List<WebElement> links = people.findElements(By.xpath(".//a[@role='link']"));
+//                            System.err.print(links.size() + " ");
+                            for (WebElement link : links) {
+                                String userLink = link.getAttribute("href");
+                                if (userLink == null || userLink.isEmpty()) {
+                                    continue;
+                                }
+                                System.err.println(userLink);
+                                String[] splits = userLink.split("/");
+                                user = splits[splits.length - 1];
+                                break;
+                            }
+
+                        } catch (Exception e) {
+                            //noinspection CallToPrintStackTrace
+                            e.printStackTrace();
                         }
                         if (!user.isEmpty() && !users.contains(user)) {
                             added++;
@@ -64,10 +78,14 @@ public class TwitterUserScraper extends Scraper {
                             siteScroller.scrollToElement(people);
                             int n = users.size();
                             progressPrinter.update(n);
+                            if (saveFile != null) {
+                                JsonFileManager.toJson(saveFile, users, false);
+                            }
                             Thread.sleep(200);
                         }
                     }
                     catch (Exception e) {
+                        Thread.sleep(300);
                         continue;
                     }
                 }
@@ -85,7 +103,7 @@ public class TwitterUserScraper extends Scraper {
                     }
                     catch (Exception e) {
                         countRetry = 0;
-                        siteScroller.scrollToBottom();
+//                        siteScroller.scrollToBottom();
                     }
 
                     if (countEmpty > 5) {
@@ -112,6 +130,7 @@ public class TwitterUserScraper extends Scraper {
                 break;
             }
         }
+//        progressPrinter.printProgress(users.size(), true);
         return users;
     }
 
@@ -120,11 +139,11 @@ public class TwitterUserScraper extends Scraper {
         siteQuery.goToUser(userId, TwitterQuery.USER_VERIFIED_FOLLOWERS);
         Thread.sleep(3000);
         Set<String> userIds;
-        userIds = getUsers(200, 600, -1);
+        userIds = getUsers(200, 600, -1, null);
         user.getFollowers().addAll(userIds);
         siteQuery.goToUser(userId, TwitterQuery.USER_FOLLOWERS);
         Thread.sleep(3000);
-        userIds = getUsers(200, 600, -1);
+        userIds = getUsers(200, 600, -1, null);
         user.getFollowers().addAll(userIds);
         return user;
     }
@@ -133,7 +152,7 @@ public class TwitterUserScraper extends Scraper {
         Set<String> userIds;
 
         System.err.println("Preparing to get Followers...");
-        userIds = JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, Set.class);
+        userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
         users = JsonFileManager.fromJsonToMap(USER_FOLLOWERS_SCRAPE_FILE, true);
         int counter = 0, numberOfUsers = userIds.size();
         if (limit == 0) {
@@ -142,7 +161,7 @@ public class TwitterUserScraper extends Scraper {
 
         ProgressPrinter progressPrinter = new ProgressPrinter("get followers", limit);
         for (String userId : userIds) {
-            if (users.containsKey(userId) || (users.get(userId) != null && !users.get(userId).getFollowers().isEmpty())) {
+            if (users.containsKey(userId) && (users.get(userId) != null && !users.get(userId).getFollowers().isEmpty())) {
                 System.err.println("Followers of '" + userId + "' is already scraped!");
                 counter++;
                 continue;
@@ -179,15 +198,44 @@ public class TwitterUserScraper extends Scraper {
         progressPrinter.printProgress(counter, true);
     }
 
-    @SuppressWarnings({"CallToPrintStackTrace", "unchecked"})
-    public void getUserSearch(int maxUsers, boolean hasScraped) throws InterruptedException {
-        System.out.println("Get users...");
-        Set<String> users = new HashSet<>();
-        if (hasScraped) {
-            users = (Set<String>) JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, Set.class);
+    public void getUserSearch(String query, int maxUsers) throws InterruptedException {
+        Set<String> users;
+        if (query == null || query.isEmpty()) {
+            System.err.println("Query is not set!");
+            return ;
         }
-        users = getUsers(maxUsers, 1000, 0);
-        JsonFileManager.toJson(USERS_SCRAPE_FILE, users, true);
+        if (query.charAt(0) == '#') {
+            query = query.substring(1);
+            siteQuery.goToSearch(query, TwitterQuery.SEARCH_PEOPLE, true);
+        }
+        else {
+            siteQuery.goToSearch(query, TwitterQuery.SEARCH_PEOPLE, false);
+        }
+        System.out.println("Get users...");
+        Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
+//        users = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
+        JsonFileManager.toJson(USER_IDS_SCRAPE_BACKUP_FILE, temp, false);
+        users = getUsers(maxUsers, 1000, 0, USER_IDS_SCRAPE_FILE);
+        for (String user : temp) {
+            if (user.charAt(0) == '@') {
+                user = user.substring(1);
+            }
+            users.add(user);
+        }
+        JsonFileManager.toJson(USER_IDS_SCRAPE_FILE, users, true);
+    }
 
+    public void getUserSearches(int maxUsers, String... queries) throws InterruptedException {
+        int m = queries.length;
+        ProgressPrinter progressPrinter = new ProgressPrinter("Get users", maxUsers);
+        for (String query : queries) {
+            Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
+            progressPrinter.printProgress(Math.min(maxUsers, temp.size()), false);
+            if (temp.size() >= maxUsers) {
+                break;
+            }
+            getUserSearch(query, maxUsers);
+        }
+        progressPrinter.printProgress(maxUsers, true);
     }
 }

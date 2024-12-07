@@ -2,8 +2,10 @@ package twitter.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.openqa.selenium.Proxy;
+import java.util.*;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -47,6 +49,25 @@ public class DriverManager {
         return driver;
     }
 
+    public static Set<Cookie> saveCookies(WebDriver driver, String file) {
+        Set<Cookie> cookies = driver.manage().getCookies();
+        if (file == null) {
+            System.out.println(JsonFileManager.toJsonString(file, cookies, false));
+            return cookies;
+        }
+        JsonFileManager.toJson(file, cookies, false);
+        return cookies;
+    }
+
+    public static Set<Cookie> loadCookies(WebDriver driver, String file) {
+        Set<Cookie> cookies = driver.manage().getCookies();
+        if (file == null) {
+            return cookies;
+        }
+        Set<Cookie> importCookies = JsonFileManager.fromJson(file, false, Set.class);
+        cookies.addAll(importCookies);
+        return cookies;
+    }
     public static void quitDriver(WebDriver driver) {
         driver.quit();
     }

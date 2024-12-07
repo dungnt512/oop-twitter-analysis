@@ -1,0 +1,121 @@
+[
+  {
+    "name": "att",
+    "value": "1-Gu7bTeNarjwkk5iMjrFBIlNeltYIQTI8idnpTobR",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 7, 2024, 11:13:05 PM",
+    "isSecure": true,
+    "isHttpOnly": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "guest_id_marketing",
+    "value": "v1%3A173350156591140727",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Jan 10, 2026, 11:13:05 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "guest_id",
+    "value": "173350156591140727",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 6, 2025, 11:12:42 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "twid",
+    "value": "u%3D1786680885431189504",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 6, 2025, 11:13:06 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "personalization_id",
+    "value": "\"v1_f/wg/QE41FjAPETUvd0MYw\u003d\u003d\"",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 6, 2025, 11:13:06 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "kdt",
+    "value": "Uy2ANC5AxZ8mufuhSqf2EcGpZ3XZrQ0X4gh8JvK5",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Jan 10, 2026, 11:13:03 PM",
+    "isSecure": true,
+    "isHttpOnly": true,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "guest_id_ads",
+    "value": "v1%3A173350156591140727",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Jan 10, 2026, 11:13:05 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "night_mode",
+    "value": "2",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 6, 2025, 11:13:05 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "None"
+  },
+  {
+    "name": "lang",
+    "value": "en",
+    "path": "/",
+    "domain": "x.com",
+    "isSecure": false,
+    "isHttpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "auth_token",
+    "value": "7f6327254cd57a738c92fe35ae21f916bbd54c7b",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Jan 10, 2026, 11:13:03 PM",
+    "isSecure": true,
+    "isHttpOnly": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "gt",
+    "value": "1865066866185768999",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Dec 7, 2024, 1:42:42 AM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "ct0",
+    "value": "bebc6baf10774d562d33c3be1286aa527e747043e224a725db8ed256823589eb2e3da9f553031ceda7166510c8c96a2223a5ed6735c17b0b17394efcf1e3cdd3452aa9402e73d8fd1789ccc8f6ec03f7",
+    "path": "/",
+    "domain": ".x.com",
+    "expiry": "Jan 10, 2026, 11:13:04 PM",
+    "isSecure": true,
+    "isHttpOnly": false,
+    "sameSite": "Lax"
+  }
+]

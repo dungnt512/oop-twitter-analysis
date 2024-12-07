@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 @Setter
 public class TwitterLogin implements SiteLogin {
     private final String DATA_ROOT_DIR = "data/";
-    private final String TWITTER_LOGIN_URL = "https://twitter.com/i/flow/login";
+    private final String TWITTER_LOGIN_URL = "https://x.com/i/flow/login";
     private final String USER_ACCOUNT_FILE = DATA_ROOT_DIR + "userAccount.json";
     private WebDriver driver;
     private LoginAccount loginAccount;
@@ -38,6 +38,7 @@ public class TwitterLogin implements SiteLogin {
             Thread.sleep(4000);
 
             inputUsername();
+            Thread.sleep(8000);
             inputUnusualActivity();
             System.err.println("Preparing password... ");
             inputPassword();

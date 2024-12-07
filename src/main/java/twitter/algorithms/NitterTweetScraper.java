@@ -22,27 +22,23 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 public class NitterTweetScraper extends Scraper {
-    private final String DATA_ROOT_DIR = "data/";
-    private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
+    private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
     private final String USER_TWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userTweets.json";
 
     public NitterTweetScraper(WebDriver driver, SiteScroller siteScroller, SiteQuery siteQuery) {
-        this.driver = driver;
-        this.siteQuery = siteQuery;
-        this.siteScroller = siteScroller;
+        super(driver, siteScroller, siteQuery);
     }
 
     @SuppressWarnings("BusyWait")
     public User getTweetsOfUser(User user, String searchString, int tweetsLimit) throws InterruptedException {
         final int tweetsGetLimit = tweetsLimit * 3;
         final int tweetsMaxLimit = tweetsLimit * 6;
-        String userId = user.getUsername();
-        siteQuery.goToUserSearch(userId, searchString);
         List<Tweet> tweets = new ArrayList<>();
-        ProgressPrinter progressPrinter = new ProgressPrinter("get tweets of '" + user.getUsername() + "'", tweetsGetLimit, 5);
         if (user.getUsername().charAt(0) == '@') {
             user.setUsername(user.getUsername().substring(1));
         }
+        ProgressPrinter progressPrinter = new ProgressPrinter("get tweets of '" + user.getUsername() + "'", tweetsGetLimit, 5);
+        String userId = user.getUsername();
         Thread.sleep(3000);
         int counter = 0;
         while (tweets.size() < tweetsGetLimit) {
@@ -58,6 +54,7 @@ public class NitterTweetScraper extends Scraper {
                     break;
                 }
                 try {
+                    //noinspection deprecation
                     tweetLink = tweetCard.findElement(By.xpath(".//a[contains(@href, '" + user.getUsername() + "/status/')]")).getAttribute("href");
                     if (tweetLink == null) {
                         continue;
@@ -131,13 +128,13 @@ public class NitterTweetScraper extends Scraper {
         return user;
     }
 
-    @SuppressWarnings("unchecked")
     public void getTweetsOfUsers(int limit, int tweetsLimit, String searchString) throws InterruptedException {
         Set<String> userIds;
         System.err.println("Preparing to get Tweets...");
 
-        userIds = (Set<String>) JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, Set.class);
+        userIds = JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, Set.class);
         Map<String, User> users = JsonFileManager.fromJsonToMap(USER_TWEETS_SCRAPE_FILE, true);
+        if (users == null) users = new HashMap<>();
 
         int counter = 0, numberOfUsers = userIds.size();
         if (limit == 0) {
@@ -148,12 +145,13 @@ public class NitterTweetScraper extends Scraper {
             if (counter >= limit) {
                 break;
             }
-            if (users.containsKey(userId) || (users.get(userId) != null && !users.get(userId).getTweets().isEmpty())) {
-                System.err.println("Tweets of " + userId + " already crawled!");
+            if (users.containsKey(userId) && (users.get(userId) != null && !users.get(userId).getTweets().isEmpty())) {
+                System.err.println("Tweets of " + userId + " already scraped!");
                 counter++;
                 continue;
             }
             User user = new User(userId);
+            siteQuery.goToUserSearch(userId, searchString);
             user = getTweetsOfUser(user, searchString, tweetsLimit);
             users.put(userId, user);
 
@@ -161,9 +159,5 @@ public class NitterTweetScraper extends Scraper {
             JsonFileManager.toJsonFromMap(USER_TWEETS_SCRAPE_FILE, users, true);
             progressPrinter.printProgress(counter, false);
         }
-    }
-
-    public void quitDriver() {
-        DriverManager.quitDriver(driver);
     }
 }

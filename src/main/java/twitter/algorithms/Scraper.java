@@ -16,9 +16,10 @@ import twitter.navigators.TwitterQuery;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Scraper {
+    protected final String DATA_ROOT_DIR = "data/";
     protected WebDriver driver;
-    protected SiteQuery siteQuery;
     protected SiteScroller siteScroller;
+    protected SiteQuery siteQuery;
 
     public Scraper(String proxy, boolean headless) {
         driver = DriverManager.initializeDriver(proxy, headless);
@@ -26,12 +27,10 @@ public class Scraper {
             return ;
         }
         siteScroller = new SiteScroller(driver);
-        siteQuery = new TwitterQuery(driver);
     }
     public Scraper(WebDriver driver) {
         this.driver = driver;
         siteScroller = new SiteScroller(driver);
-        siteQuery = new TwitterQuery(driver);
     }
     public void quitDriver() {
         driver.quit();

@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ProgressPrinter {
+    private final int MAX_PERCENT = 100;
     private final String name;
     private int current = 0;
     private long currentTime = 0;
@@ -29,18 +30,16 @@ public class ProgressPrinter {
         this.currentTime = System.nanoTime();
     }
 
-    public boolean printProgress(int nextValue, boolean forced) {
+    public void printProgress(int nextValue, boolean forced) {
         assert percent > 0;
-        if (forced || nextValue == total || nextValue * 100 / total >= current * 100 / total + percent) {
+        if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
             long prevTime = currentTime;
             currentTime = System.nanoTime();
-            long remaining = (int)((double)(prevTime - currentTime) / (nextValue - current) * (total - nextValue));
+            long remaining = (long)((double)(currentTime - prevTime) / (nextValue - current) * (total - nextValue));
             current = nextValue;
-            System.out.println("Processing '" + name + "'... (" + (current * 100 / total) + "%/100%)[" + current + "/" + total + "] - about "
+            System.out.println("Processing '" + name + "'... (" + (current * MAX_PERCENT / total) + "%/100%)[" + current + "/" + total + "] --- about "
                     + TimePrinter.getConvertedApproximateTime(remaining) + " left");
-            return true;
         }
-        return false;
     }
 
     public boolean update(int nextValue) {

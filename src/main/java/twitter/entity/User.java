@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -13,8 +14,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends TweetObject {
+    public static class SortUsers implements Comparator<User> {
+        public int compare(User a, User b) {
+            long A = a.getLikesCount() * 3L + a.getFollowingCount() + a.getTweetsCount() * 2L + a.getFollowersCount() * 3L;
+            long B = b.getLikesCount() * 3L + b.getFollowingCount() + b.getTweetsCount() * 2L + b.getFollowersCount() * 3L;
+            return Long.compare(B, A);
+        }
+    }
+
     private String username;
     private String userLink;
+    private String location;
+    private String joinDate;
     private int tweetsCount = 0;
     private int followersCount = 0;
     private int followingCount = 0;
