@@ -77,7 +77,7 @@ public class TwitterUserScraper extends Scraper {
                             users.add(user);
                             siteScroller.scrollToElement(people);
                             int n = users.size();
-                            progressPrinter.update(n);
+                            progressPrinter.printProgress(n, false);
                             if (saveFile != null) {
                                 JsonFileManager.toJson(saveFile, users, false);
                             }

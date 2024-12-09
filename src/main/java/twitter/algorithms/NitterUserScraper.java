@@ -101,6 +101,7 @@ public class NitterUserScraper extends  Scraper {
             counter++;
             if (excludeUser.contains(userId)) {
                 System.err.println("Followers of " + userId + " is too low! Remove from list");
+                progressPrinter.update(counter);
                 continue;
             }
             if (users.containsKey(userId)) {
@@ -114,6 +115,7 @@ public class NitterUserScraper extends  Scraper {
                     continue;
                 }
                 System.err.println("Information of " + userId + " already scraped!");
+                progressPrinter.update(counter);
                 continue;
             }
             User user = new User(userId);

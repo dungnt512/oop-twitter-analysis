@@ -10,13 +10,15 @@ public class ProgressPrinter {
     private final int MAX_PERCENT = 100;
     private final String name;
     private int current = 0;
-    private long currentTime = 0;
+    private long currentTime;
+    private final long startTime;
     private final int percent;
     private final int total;
     public ProgressPrinter(String name, int total) {
         this.name = name;
         this.total = total;
-        this.currentTime = System.nanoTime();
+        this.startTime = System.nanoTime();
+        this.currentTime = startTime;
         this.percent = Math.max(1, 1000 / total);
     }
     public ProgressPrinter(String name, int total, int percent) {
@@ -27,7 +29,8 @@ public class ProgressPrinter {
         this.name = name;
         this.total = total;
         this.percent = percent;
-        this.currentTime = System.nanoTime();
+        this.startTime = System.nanoTime();
+        this.currentTime = startTime;
     }
 
     public void printProgress(int nextValue, boolean forced) {
@@ -35,7 +38,15 @@ public class ProgressPrinter {
         if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
             long prevTime = currentTime;
             currentTime = System.nanoTime();
-            long remaining = (long)((double)(currentTime - prevTime) / (nextValue - current) * (total - nextValue));
+            long remaining = Long.MAX_VALUE;
+            if (nextValue > current) {
+                double rate = (double)(currentTime - prevTime) / (nextValue - current);
+                rate = (rate * 49 + (double)(currentTime - startTime) / nextValue) / 50;
+                remaining = (long)(rate * (total - nextValue));
+            }
+            else {
+                if (nextValue == total) remaining = 0;
+            }
             current = nextValue;
             System.out.println("Processing '" + name + "'... (" + (current * MAX_PERCENT / total) + "%/100%)[" + current + "/" + total + "] --- about "
                     + TimePrinter.getConvertedApproximateTime(remaining) + " left");
@@ -46,7 +57,9 @@ public class ProgressPrinter {
         if (nextValue > total) {
             return false;
         }
-        printProgress(nextValue, false);
+        current = nextValue;
+        currentTime = System.nanoTime();
+//        printProgress(nextValue, false);
         return true;
     }
     public boolean increment(int delta) {

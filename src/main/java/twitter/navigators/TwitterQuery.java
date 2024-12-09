@@ -12,15 +12,20 @@ public class TwitterQuery implements SiteQuery {
     private final String TWITTER_HOME_PAGE = "https://x.com/";
     private WebDriver driver;
 
+    @Override
     public void goToHome() {
         driver.get(TWITTER_HOME_PAGE);
     }
-
+    @Override
+    public void goToLink(String link) {
+        driver.get(TWITTER_HOME_PAGE + link);
+    }
     public static final String SEARCH_LATEST    = "live";
     public static final String SEARCH_PEOPLE    = "user";
     public static final String SEARCH_MEDIA     = "media";
     public static final String SEARCH_LISTS     = "list";
 
+    @Override
     public void goToSearch(String query, String tab, boolean isHashTag) {
         if (query == null || query.isEmpty()) {
             System.err.println("Query is not set!");
@@ -42,6 +47,7 @@ public class TwitterQuery implements SiteQuery {
     public static final String USER_REPLIES             = "with_replies";
     public static final String USER_AFFILIATES          = "affiliates";
 
+    @Override
     public void goToUser(String query, String tab) {
         if (query == null || query.isEmpty()) {
             System.err.println("Query is not set!");
@@ -52,7 +58,8 @@ public class TwitterQuery implements SiteQuery {
         driver.get(url);
     }
 
-    public void goToUserSearch(String query, String search) {
-
-    }
+    @Override
+    public void goToUserSearch(String query, String search) {}
+    @Override
+    public void goToUserSearches(String query, String[] searches) {}
 }

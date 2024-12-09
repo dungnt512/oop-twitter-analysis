@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,8 +20,10 @@ public class NitterQuery implements SiteQuery {
     }
 
     @Override
-    public void goToSearch(String query, String tab, boolean isHashTag) {
-
+    public void goToSearch(String query, String tab, boolean isHashTag) {}
+    @Override
+    public void goToLink(String link) {
+        driver.get(NITTER_HOME_PAGE + link);
     }
 
     @Override
@@ -39,6 +43,7 @@ public class NitterQuery implements SiteQuery {
         driver.get(url);
     }
 
+    @Override
     public void goToUserSearch(String query, String search) {
         if (query == null || query.isEmpty()) {
             System.err.println("Query is not set!");
@@ -54,4 +59,25 @@ public class NitterQuery implements SiteQuery {
         System.out.println("Get users of '" + query + "' in search results of '" + search + "'...");
         driver.get(url);
     }
+
+    @Override
+    public void goToUserSearches(String query, String[] searches) {
+        if (query == null || query.isEmpty() || searches == null || searches.length == 0) {
+            System.err.println("Query is not set!");
+            return ;
+        }
+        if (query.charAt(0) == '@') {
+            query = query.substring(1);
+        }
+        StringBuilder url = new StringBuilder(NITTER_HOME_PAGE + query + '/');
+        int m = searches.length;
+        url.append("search?f=tweets&q=%28").append(searches[0]);
+        for (int i = 1; i < m; i++) {
+            url.append("%2C+OR+").append(searches[i]);
+        }
+        url.append("%29&since=&until=&near=");
+        System.out.println("Get users of '" + query + "' in search results of '" + Arrays.toString(searches) + "'...");
+        driver.get(url.toString());
+    }
+
 }
