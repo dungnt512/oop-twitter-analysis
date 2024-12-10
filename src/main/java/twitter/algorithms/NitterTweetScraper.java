@@ -190,7 +190,8 @@ public class NitterTweetScraper extends Scraper {
             users.put(user.getUsername(), user);
 
             counter++;
-            JsonFileManager.toJsonFromMap(USER_TWEETS_SCRAPE_FILE, users, false);
+//            JsonFileManager.toJsonFromMap(USER_TWEETS_SCRAPE_FILE, users, false);
+            JsonFileManager.toJson(USER_TWEETS_SCRAPE_FILE, users, false);
             progressPrinter.printProgress(counter, false);
         }
     }

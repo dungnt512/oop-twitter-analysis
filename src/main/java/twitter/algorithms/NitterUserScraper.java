@@ -123,7 +123,8 @@ public class NitterUserScraper extends  Scraper {
             user = getInfoOfUser(user);
             if (user.getFollowersCount() >= MINIMUM_FOLLOWERS_COUNT) {
                 users.put(userId, user);
-                JsonFileManager.toJsonFromMap(USERS_SCRAPE_FILE, users, false);
+//                JsonFileManager.toJsonFromMap(USERS_SCRAPE_FILE, users, false);
+                JsonFileManager.toJson(USER_EXCLUDE_FILE, users, false);
                 progressPrinter.printProgress(counter, false);
             }
             else {

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.pannable.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="twitter.application.LoginPage">
+   <children>
+      <AnchorPane layoutX="450.0" layoutY="90.0" prefHeight="421.0" prefWidth="396.0" style="-fx-background-color: #000000;">
+         <children>
+            <JFXTextArea id="usernameField" layoutX="63.0" layoutY="140.0" prefHeight="36.0" prefWidth="271.0" promptText="username" unFocusColor="#0066cc">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXTextArea>
+            <JFXTextArea id="emailField" layoutX="63.0" layoutY="193.0" prefHeight="36.0" prefWidth="271.0" promptText="email or phone number" unFocusColor="#0066cc">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXTextArea>
+            <JFXButton layoutX="166.0" layoutY="355.0" onMouseClicked="#handleLogin" style="-fx-background-color: #ffffff;" text="Login">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </JFXButton>
+            <Label layoutX="130.0" layoutY="68.0" text="Login to X" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="28.0" />
+               </font>
+            </Label>
+            <JFXCheckBox layoutX="63.0" layoutY="306.0" text="Remember me" textFill="WHITE" />
+            <JFXPasswordField id="passwordField" layoutX="63.0" layoutY="244.0" prefHeight="40.0" prefWidth="271.0" promptText="password" unFocusColor="#0066cc">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </JFXPasswordField>
+         </children>
+      </AnchorPane>
+      <Label layoutX="84.0" layoutY="239.0" prefHeight="40.0" prefWidth="309.0" text="Welcome to X Scraper" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+      <PannablePane layoutX="141.0" layoutY="111.0" prefHeight="140.0" prefWidth="184.0" />
+   </children>
+</AnchorPane>

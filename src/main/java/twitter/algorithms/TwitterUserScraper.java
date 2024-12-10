@@ -1,5 +1,6 @@
 package twitter.algorithms;
 
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.json.Json;
 import twitter.controller.JsonFileManager;
 import twitter.entity.ProgressPrinter;
 import twitter.entity.User;
@@ -58,11 +60,12 @@ public class TwitterUserScraper extends Scraper {
                             List<WebElement> links = people.findElements(By.xpath(".//a[@role='link']"));
 //                            System.err.print(links.size() + " ");
                             for (WebElement link : links) {
-                                String userLink = link.getAttribute("href");
+                                //noinspection deprecation
+                                var userLink = link.getAttribute("href");
                                 if (userLink == null || userLink.isEmpty()) {
                                     continue;
                                 }
-                                System.err.println(userLink);
+//                                System.err.println(userLink);
                                 String[] splits = userLink.split("/");
                                 user = splits[splits.length - 1];
                                 break;
@@ -130,7 +133,7 @@ public class TwitterUserScraper extends Scraper {
                 break;
             }
         }
-//        progressPrinter.printProgress(users.size(), true);
+        progressPrinter.printProgress(users.size(), true);
         return users;
     }
 
@@ -153,7 +156,30 @@ public class TwitterUserScraper extends Scraper {
 
         System.err.println("Preparing to get Followers...");
         userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
-        users = JsonFileManager.fromJsonToMap(USER_FOLLOWERS_SCRAPE_FILE, true);
+        users = JsonFileManager.fromJson(USER_FOLLOWERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        List<String> deleteIds = new ArrayList<>();
+        List<User> addedUsers = new ArrayList<>();
+        for (Map.Entry<String, User> entry : users.entrySet()) {
+            String userId = entry.getKey();
+            if (userId.charAt(0) == '@') {
+                deleteIds.add(userId);
+                addedUsers.add(entry.getValue());
+            }
+        }
+        for (String id : deleteIds) {
+            users.remove(id);
+        }
+        for (User user : addedUsers) {
+            user.setUsername(User.removeAtSign(user.getUsername()));
+            List<String> followers = new ArrayList<>();
+            for (String id : user.getFollowers()) {
+                followers.add(User.removeAtSign(id));
+            }
+            user.setFollowers(followers);
+            users.put(user.getUsername(), user);
+        }
+        JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, users, true);
+
         int counter = 0, numberOfUsers = userIds.size();
         if (limit == 0) {
             limit = numberOfUsers;
@@ -194,7 +220,7 @@ public class TwitterUserScraper extends Scraper {
 //            }
 //        }
 
-        JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, userIds, true);
+        JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, users, true);
         progressPrinter.printProgress(counter, true);
     }
 

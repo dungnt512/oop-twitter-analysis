@@ -50,7 +50,7 @@ public class JsonFileManager {
         return value;
     }
 
-    public static String toJsonString(String file, Object value, boolean isPrint) {
+    public static String toJsonString(String file, Object value) {
         return gson.toJson(value);
     }
 

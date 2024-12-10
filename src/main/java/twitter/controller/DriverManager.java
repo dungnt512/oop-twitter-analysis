@@ -56,7 +56,7 @@ public class DriverManager {
     public static Set<Cookie> saveCookies(WebDriver driver, String file) {
         Set<Cookie> cookies = driver.manage().getCookies();
         if (file == null) {
-            System.out.println(JsonFileManager.toJsonString(file, cookies, false));
+            System.out.println(JsonFileManager.toJsonString(file, cookies));
             return cookies;
         }
         JsonFileManager.toJson(file, cookies, false);

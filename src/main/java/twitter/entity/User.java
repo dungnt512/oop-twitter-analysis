@@ -36,6 +36,7 @@ public class User extends TweetObject {
 
     public User(String username) {
         this.typeName = "user";
+        removeAtSign(username);
         this.username = username;
     }
     public User(String userLink, boolean isLink) {
@@ -48,5 +49,12 @@ public class User extends TweetObject {
             String[] splits = userLink.split("/");
             this.username = splits[splits.length - 1];
         }
+    }
+
+    public static String removeAtSign(String userId) {
+        if (userId.charAt(0) == '@') {
+            userId = userId.substring(1);
+        }
+        return userId;
     }
 }

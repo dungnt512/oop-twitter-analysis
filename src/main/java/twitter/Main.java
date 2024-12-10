@@ -32,23 +32,25 @@ public class Main {
 //                proxyList.add("148.72.165.184:10501");
 
                 for (String proxy : proxyList) {
-//                    TwitterScraper scraper = new TwitterScraper(proxy, false, true);
-//                    Thread.sleep(3000);
+                    TwitterScraper scraper = new TwitterScraper(proxy, false, true);
+                    driver = scraper.getDriver();
+                    //noinspection BusyWait
+                    Thread.sleep(3000);
 //                    scraper.getTwitterUserScraper().getUserSearches(5000, "hyperledger fabric", "ethereum", "corda", "quorum", "#blockchain", "crypto", "#crypto");
-//                    scraper.getTwitterUserScraper().getUsersFollowers(0);
+                    scraper.getTwitterUserScraper().getUsersFollowers(0);
 //                    scraper.quitDriver();
 //                    TwitterScraper twitterScraper = new TwitterScraper("", false);
 //                    twitterScraper.login();
-                    NitterScraper scraper = new NitterScraper(proxy, false);
-                    driver = scraper.getDriver();
+//                    NitterScraper scraper = new NitterScraper(proxy, false);
 //                    scraper.getNitterUserScraper().getInfoOfUsers(0);
 //                    scraper.getNitterTweetScraper().getTweetsOfUsers(0, 50, "blockchain", "ethereum", "crypto", "hyperledger fabric");
-                    scraper.getNitterTweetScraper().getTweetsOfUsers(0, 50);
+//                    scraper.getNitterTweetScraper().getTweetsOfUsers(0, 50);
                     scraper.quitDriver();
                 }
                 break;
             } catch (Exception e) {
                 assert driver != null;
+                System.err.println(e.getMessage() + ". Try again!");
                 driver.quit();
             }
         }

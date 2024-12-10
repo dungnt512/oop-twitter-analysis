@@ -36,19 +36,24 @@ public class ProgressPrinter {
     public void printProgress(int nextValue, boolean forced) {
         assert percent > 0;
         if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
+            int currentPercent = (current * MAX_PERCENT / total);
+            if (forced) {
+                currentPercent = MAX_PERCENT;
+            }
             long prevTime = currentTime;
             currentTime = System.nanoTime();
             long remaining = Long.MAX_VALUE;
-            if (nextValue > current) {
-                double rate = (double)(currentTime - prevTime) / (nextValue - current);
-                rate = (rate * 49 + (double)(currentTime - startTime) / nextValue) / 50;
-                remaining = (long)(rate * (total - nextValue));
-            }
+            if (currentPercent == MAX_PERCENT) remaining = 0;
             else {
-                if (nextValue == total) remaining = 0;
+                if (nextValue > current) {
+                    double rate = (double) (currentTime - prevTime) / (nextValue - current);
+                    rate = (rate * 49 + (double) (currentTime - startTime) / nextValue) / 50;
+                    remaining = (long) (rate * (total - nextValue));
+                }
             }
+
             current = nextValue;
-            System.out.println("Processing '" + name + "'... (" + (current * MAX_PERCENT / total) + "%/100%)[" + current + "/" + total + "] --- about "
+            System.out.println("Processing '" + name + "'... (" + currentPercent + "%/100%)[" + current + "/" + total + "] --- about "
                     + TimePrinter.getConvertedApproximateTime(remaining) + " left");
         }
     }
