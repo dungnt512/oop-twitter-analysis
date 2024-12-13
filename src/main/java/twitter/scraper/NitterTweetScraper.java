@@ -1,4 +1,4 @@
-package twitter.algorithms;
+package twitter.scraper;
 
 import com.google.gson.reflect.TypeToken;
 import org.openqa.selenium.By;
@@ -9,11 +9,8 @@ import twitter.entity.User;
 import org.openqa.selenium.WebDriver;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import twitter.controller.DriverManager;
 import twitter.controller.JsonFileManager;
-import twitter.navigators.NitterQuery;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
 
@@ -132,7 +129,7 @@ public class NitterTweetScraper extends Scraper {
         return user;
     }
 
-    public void getTweetsOfUsers(int limit, int tweetsLimit, String... searchStrings) throws InterruptedException {
+    public void getTweetsOfUsers(int limit, int base, String... searchStrings) throws InterruptedException {
         Map<String, User> userIds;
         System.err.println("Preparing to get Tweets...");
 
@@ -186,7 +183,7 @@ public class NitterTweetScraper extends Scraper {
             else {
                 siteQuery.goToUser(user.getUsername(), "");
             }
-            user = getTweetsOfUser(user, tweetsLimit);
+            user = getTweetsOfUser(user, base);
             users.put(user.getUsername(), user);
 
             counter++;

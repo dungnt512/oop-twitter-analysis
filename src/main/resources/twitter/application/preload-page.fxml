@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="545.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="twitter.application.PreloadPageController">
+   <children>
+      <MFXProgressSpinner fx:id="progressSpinner" layoutX="297.0" layoutY="171.0" prefHeight="137.0" prefWidth="259.0" />
+      <Label fx:id="label" alignment="BASELINE_CENTER" layoutX="260.0" layoutY="326.0" prefHeight="27.0" prefWidth="333.0" text="Please wait..." textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

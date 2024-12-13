@@ -36,4 +36,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/data/userAccount.json
+/data/x_account/userAccount.json

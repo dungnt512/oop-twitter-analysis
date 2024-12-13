@@ -1,5 +1,7 @@
 package twitter.navigators;
 
+import twitter.entity.LoginAccount;
+
 public interface SiteQuery {
     void goToHome();
     void goToLink(String link);
@@ -7,4 +9,5 @@ public interface SiteQuery {
     void goToUser(String query, String tab);
     void goToUserSearch(String query, String search);
     void goToUserSearches(String username, String[] searchStrings);
+    LoginAccount getUserProfile();
 }

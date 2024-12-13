@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonReader;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -28,6 +29,7 @@ public class JsonFileManager {
         }
         catch (Exception e) {
             System.out.println("Accessing '" + file + "' error.");
+            e.printStackTrace();
             return value;
         }
         return value;

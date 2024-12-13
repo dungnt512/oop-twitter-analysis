@@ -1,4 +1,4 @@
-package twitter.algorithms;
+package twitter.scraper;
 import com.google.gson.reflect.TypeToken;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -9,11 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import twitter.controller.DriverManager;
 import twitter.controller.JsonFileManager;
-import twitter.navigators.NitterQuery;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
 

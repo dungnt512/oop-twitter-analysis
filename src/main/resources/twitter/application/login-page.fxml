@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.mfxcore.controls.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="853.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="twitter.application.LoginPageController">
+   <children>
+      <AnchorPane layoutX="427.0" layoutY="50.0" prefHeight="446.0" prefWidth="406.0">
+         <children>
+            <Label layoutX="166.0" layoutY="45.0" text="Login">
+               <font>
+                  <Font name="System Bold" size="28.0" />
+               </font>
+            </Label>
+            <MFXButton contentDisplay="CENTER" defaultButton="true" layoutX="171.0" layoutY="357.0" onAction="#handleLogin" onKeyPressed="#handleLogin" onMouseClicked="#handleLogin" prefHeight="40.0" prefWidth="64.0" rippleAnimateShadow="true" rippleColor="#0099ff" style="-fx-background-color: #bdbdbd;" text="Login">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </MFXButton>
+            <MFXTextField fx:id="usernameField" floatingText="username" layoutX="67.0" layoutY="129.0" prefHeight="49.0" prefWidth="272.0" />
+            <MFXTextField fx:id="emailField" floatingText="email" layoutX="67.0" layoutY="199.0" prefHeight="49.0" prefWidth="272.0" />
+            <MFXPasswordField fx:id="passwordField" floatingText="password" layoutX="67.0" layoutY="269.0" prefHeight="49.0" prefWidth="272.0" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="56.0" layoutY="220.0" text="X Scraper">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="56.0" layoutY="273.0" text="Login by your X account to using X Scraper">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

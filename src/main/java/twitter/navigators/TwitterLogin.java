@@ -11,9 +11,9 @@ import java.util.NoSuchElementException;
 @Getter
 @Setter
 public class TwitterLogin implements SiteLogin {
-    private final String DATA_ROOT_DIR = "data/";
+    private final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
     private final String TWITTER_LOGIN_URL = "https://x.com/i/flow/login";
-    private final String USER_ACCOUNT_FILE = DATA_ROOT_DIR + "userAccount.json";
+    private final String USER_ACCOUNT_FILE = X_LOGIN_DATA_ROOT_DIR + "userAccount.json";
     private WebDriver driver;
     private LoginAccount loginAccount;
 

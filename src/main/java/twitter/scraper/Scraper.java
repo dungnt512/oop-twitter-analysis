@@ -1,4 +1,4 @@
-package twitter.algorithms;
+package twitter.scraper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +8,6 @@ import org.openqa.selenium.WebDriver;
 import twitter.controller.DriverManager;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
-import twitter.navigators.TwitterLogin;
-import twitter.navigators.TwitterQuery;
 
 @Getter
 @Setter
@@ -17,6 +15,7 @@ import twitter.navigators.TwitterQuery;
 @AllArgsConstructor
 public class Scraper {
     protected final String DATA_ROOT_DIR = "data/";
+    protected final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
     protected WebDriver driver;
     protected SiteScroller siteScroller;
     protected SiteQuery siteQuery;

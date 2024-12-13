@@ -9,7 +9,6 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.v131.network.model.Headers;
 
 @Getter
 @Setter

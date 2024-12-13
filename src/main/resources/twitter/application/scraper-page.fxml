@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCheckbox?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
+<?import io.github.palexdev.materialfx.controls.MFXTableColumn?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="791.0" prefWidth="1229.0" stylesheets="@css/Progress.css, @css/ChecksRadiosToggles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="twitter.application.ScraperPageController">
+   <children>
+      <Label alignment="BASELINE_CENTER" layoutX="47.0" layoutY="34.0" text="X Scraper" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <Label fx:id="helloLabel" layoutX="47.0" layoutY="87.0" prefHeight="28.0" prefWidth="1136.0" text="Hello, Guest! Welcome to X Scraper!" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="47.0" layoutY="140.0" prefHeight="595.0" prefWidth="541.0">
+         <children>
+            <Label alignment="BASELINE_LEFT" layoutX="19.0" layoutY="15.0" prefHeight="28.0" prefWidth="39.0" text="KOLs" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="310.0" layoutY="51.0" style="-fx-background-color: -mfx-green;" text="Scrape" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="51.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="51.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="19.0" layoutY="297.0" prefHeight="28.0" prefWidth="153.0" text="KOLs Profile Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="296.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="296.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="18.0" layoutY="372.0" prefHeight="28.0" prefWidth="130.0" text="Followers Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="333.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="333.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="21.0" layoutY="334.0" prefHeight="28.0" prefWidth="74.0" text="Following" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="371.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="451.0" layoutY="371.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="19.0" layoutY="425.0" prefHeight="28.0" prefWidth="110.0" text="Tweets Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="424.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="424.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="18.0" layoutY="462.0" prefHeight="28.0" prefWidth="130.0" text="Comment Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="461.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="461.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="18.0" layoutY="500.0" prefHeight="28.0" prefWidth="130.0" text="Re-tweets Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="499.0" style="-fx-background-color: -mfx-red;" text="Upload">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="499.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <Label alignment="BASELINE_LEFT" layoutX="19.0" layoutY="552.0" prefHeight="28.0" prefWidth="110.0" text="All Scraper" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="381.0" layoutY="551.0" style="-fx-background-color: -mfx-green;" text="Scrape">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="451.0" layoutY="551.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXTableColumn layoutX="10.0" layoutY="90.0" prefHeight="193.0" prefWidth="521.0" />
+            <MFXTextField alignment="CENTER" floatMode="ABOVE" layoutX="62.0" layoutY="14.0" prefHeight="29.0" prefWidth="370.0" promptText="search query" />
+            <MFXTextField alignment="CENTER" floatMode="ABOVE" layoutX="442.0" layoutY="15.0" prefHeight="29.0" prefWidth="94.0" promptText="numbers" />
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="293.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font></MFXCheckbox>
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="421.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </MFXCheckbox>
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="458.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </MFXCheckbox>
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="496.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </MFXCheckbox>
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="330.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </MFXCheckbox>
+            <MFXCheckbox id="customCheck" allowIndeterminate="true" layoutX="286.0" layoutY="368.0" prefHeight="37.0" prefWidth="86.0" text="Scrape">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </MFXCheckbox>
+         </children>
+      </AnchorPane>
+      <MFXProgressBar id="determinateBar" fx:id="progressBar" animationSpeed="0.5" layoutX="75.0" layoutY="760.0" prefHeight="5.0" prefWidth="1080.0" progress="0.42" />
+      <AnchorPane layoutX="645.0" layoutY="140.0" prefHeight="595.0" prefWidth="541.0">
+         <children>
+            <Label alignment="BASELINE_LEFT" layoutX="16.0" layoutY="14.0" prefHeight="28.0" prefWidth="94.0" text="PageRank" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="314.0" layoutY="16.0" style="-fx-background-color: -mfx-green;" text="Run">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="365.0" layoutY="16.0" style="-fx-background-color: -mfx-yellow;" text="Visualize">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="448.0" layoutY="16.0" prefWidth="86.0" style="-fx-background-color: -mfx-blue;" text="Download">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font></MFXButton>
+            <MFXTableColumn layoutX="13.0" layoutY="54.0" prefHeight="527.0" prefWidth="515.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

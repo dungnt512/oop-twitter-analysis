@@ -1,9 +1,13 @@
 package twitter.navigators;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.openqa.selenium.WebElement;
+import java.util.*;
+import twitter.entity.LoginAccount;
 
 @Getter
 @Setter
@@ -62,4 +66,13 @@ public class TwitterQuery implements SiteQuery {
     public void goToUserSearch(String query, String search) {}
     @Override
     public void goToUserSearches(String query, String[] searches) {}
+
+    public LoginAccount getUserProfile() {
+        WebElement accountSwitcher = driver.findElement(By.xpath("//button[@data-testid='SideNav_AccountSwitcher_Button']"));
+        List<WebElement> profile = accountSwitcher.findElements(By.xpath(".//span[@class='css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3']"));
+        LoginAccount account = new LoginAccount();
+        account.setName(profile.getFirst().getText());
+        account.setUsername(profile.get(1).getText());
+        return account;
+    }
 }

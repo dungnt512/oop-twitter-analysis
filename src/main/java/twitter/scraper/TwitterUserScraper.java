@@ -1,4 +1,4 @@
-package twitter.algorithms;
+package twitter.scraper;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.json.Json;
 import twitter.controller.JsonFileManager;
 import twitter.entity.ProgressPrinter;
 import twitter.entity.User;

@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import twitter.entity.LoginAccount;
 
 import java.util.Arrays;
 
@@ -80,4 +81,7 @@ public class NitterQuery implements SiteQuery {
         driver.get(url.toString());
     }
 
+    public LoginAccount getUserProfile() {
+        return null;
+    }
 }

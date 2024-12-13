@@ -1,27 +1,15 @@
-package twitter.algorithms;
+package twitter.scraper;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openqa.selenium.*;
-import org.openqa.selenium.json.Json;
-import twitter.controller.DriverManager;
 import twitter.controller.JsonFileManager;
 import twitter.entity.LoginAccount;
-import twitter.entity.ProgressPrinter;
 import twitter.navigators.*;
-import twitter.entity.User;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Getter
@@ -32,7 +20,7 @@ public class TwitterScraper extends Scraper {
     private List<Map<String, String>> scrapedTweets = new ArrayList<>();
     private TwitterLogin siteLogin;
     private TwitterUserScraper twitterUserScraper;
-    private final String SITE_LOGIN_COOKIES_FILE = DATA_ROOT_DIR + "siteLoginCookies.json";
+    private final String SITE_LOGIN_COOKIES_FILE = X_LOGIN_DATA_ROOT_DIR + "siteLoginCookies.json";
 
     public TwitterScraper(LoginAccount loginAccount, String proxy, boolean headless, boolean loginWithCookies) {
         super(proxy, headless);
@@ -54,6 +42,7 @@ public class TwitterScraper extends Scraper {
         siteLogin = new TwitterLogin(driver);
         siteQuery = new TwitterQuery(driver);
         twitterUserScraper = new TwitterUserScraper(driver, siteScroller, siteQuery);
+//        System.err.println(SITE_LOGIN_COOKIES_FILE);
         login(loginWithCookies);
     }
     public void login(boolean loginWithCookies) {
