@@ -23,7 +23,8 @@ module twitter {
     requires org.seleniumhq.selenium.manager;
     requires com.google.gson;
     requires MaterialFX;
-    requires fr.brouillard.oss.cssfx;  // Add other required JavaFX modules here.
+    requires fr.brouillard.oss.cssfx;
+    requires annotations;  // Add other required JavaFX modules here.
 
     opens twitter.application to
             javafx.graphics, javafx.fxml, com.google.gson, org.seleniumhq.selenium.api;

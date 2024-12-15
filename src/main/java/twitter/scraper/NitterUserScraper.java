@@ -80,6 +80,7 @@ public class NitterUserScraper extends Scraper {
         System.err.println("Preparing to get Users...");
 
         userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, new TypeToken<Set<String>>() {}.getType());
+        if (userIds == null) userIds = new HashSet<>();
         Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
         if (users == null) users = new HashMap<>();
 

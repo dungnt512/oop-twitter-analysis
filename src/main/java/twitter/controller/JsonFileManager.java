@@ -28,7 +28,7 @@ public class JsonFileManager {
             value = gson.fromJson(reader, type);
         }
         catch (Exception e) {
-            System.out.println("Accessing '" + file + "' error.");
+            System.out.println("Reading '" + file + "' error.");
 //            e.printStackTrace();
             return value;
         }
@@ -66,7 +66,7 @@ public class JsonFileManager {
             out.close();
         }
         catch (Exception e) {
-            System.err.println("Accessing '" + file + "' error!");
+            System.err.println("Writing '" + file + "' error!");
         }
     }
 

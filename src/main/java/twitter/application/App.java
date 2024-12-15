@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.StageStyle;
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.chrome.ChromeDriver;
 import twitter.entity.LoginAccount;
 import twitter.scraper.XScraper;
@@ -58,6 +59,14 @@ public class App extends Application {
         stage.show();
 
 
+        Task<Void> task = getVoidTask();
+        Thread thread = new Thread(task);
+        thread.start();
+        controller.getProgressSpinner().progressProperty().bind(task.progressProperty());
+    }
+
+    @NotNull
+    private Task<Void> getVoidTask() {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
@@ -65,7 +74,7 @@ public class App extends Application {
                 scraper = new XScraper("", false, true);
                 updateProgress(2, 4);
                 scraper.getTwitterScraper().getSiteQuery().goToHome();
-                Thread.sleep(1000);
+                Thread.sleep(2000);
                 updateProgress(3, 4);
                 loginAccount = scraper.getTwitterScraper().getSiteQuery().getUserProfile();
                 System.err.println(loginAccount.getUsername() + " " + loginAccount.getName());
@@ -75,10 +84,9 @@ public class App extends Application {
             }
         };
         task.setOnSucceeded(e -> switchToScraperPage());
-        Thread thread = new Thread(task);
-        thread.start();
-        controller.getProgressSpinner().progressProperty().bind(task.progressProperty());
+        return task;
     }
+
     private void switchToScraperPage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scraper-page.fxml"));
@@ -91,22 +99,26 @@ public class App extends Application {
                     int step = 100;
                     for (int i = 0; i <= step; i++) {
                         updateProgress(i, step);
-                        Thread.sleep(100);
+                        Thread.sleep(25);
                     }
                     return null;
                 }
             };
             controller.getProgressBar().progressProperty().bind(task.progressProperty());
             controller.setXScraper(scraper);
+//            controller.setProgressMessageProperty();
             Label label = controller.getHelloLabel();
             label.setText("Hello " + loginAccount.getName() + " (" + loginAccount.getUsername() + ")! Welcome to X Scraper!");
 
+            primaryStage.setScene(scene);
+            primaryStage.centerOnScreen();
             Thread thread = new Thread(task);
             thread.start();
 
-            primaryStage.setScene(scene);
-            primaryStage.centerOnScreen();
-        } catch (IOException _) {}
+        } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

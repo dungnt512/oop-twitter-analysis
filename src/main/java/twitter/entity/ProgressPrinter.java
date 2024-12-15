@@ -18,7 +18,7 @@ public class ProgressPrinter {
     private String lastMessage;
 
     public ProgressPrinter(String name, int total) {
-        this(name, total, Math.max(1, 1000 / total));
+        this(name, total, 1);
     }
     public ProgressPrinter(String name, int total, int percent) {
         if (percent < 1) {
@@ -36,7 +36,7 @@ public class ProgressPrinter {
     public void printProgress(int nextValue, boolean forced) {
         assert percent > 0;
         if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
-            int currentPercent = (current * MAX_PERCENT / total);
+            int currentPercent = (nextValue * MAX_PERCENT / total);
             if (forced) {
                 currentPercent = MAX_PERCENT;
             }

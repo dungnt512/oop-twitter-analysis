@@ -160,12 +160,16 @@ public class NitterTweetScraper extends Scraper {
             }
         }
 
+        if (userIds == null) {
+            userIds = new HashMap<>();
+        }
         int counter = 0, numberOfUsers = userIds.size();
         if (limit == 0) {
             limit = numberOfUsers;
         }
         int numSearchString = searchStrings.length;
         progressPrinter = new ProgressPrinter("Get tweets", limit);
+
         for (User user : userIds.values()) {
             if (counter >= limit) {
                 break;

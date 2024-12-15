@@ -26,6 +26,7 @@ public class TwitterUserScraper extends Scraper {
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
     private final String USER_FOLLOWERS_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowers.json";
     private final String USER_FOLLOWING_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowing.json";
+    private boolean isGetUserSearches = false;
 
     TwitterUserScraper(WebDriver driver, SiteScroller siteScroller, SiteQuery siteQuery) {
         super(driver, siteScroller, siteQuery);
@@ -44,6 +45,7 @@ public class TwitterUserScraper extends Scraper {
             retryLimit = 20;
         }
         ProgressPrinter progressPrinter = new ProgressPrinter("get username", maxUsers);
+        int current = this.progressPrinter.getCurrent();
 
         while (users.size() < maxUsers) {
             try {
@@ -77,6 +79,10 @@ public class TwitterUserScraper extends Scraper {
                         if (!user.isEmpty() && !users.contains(user)) {
                             added++;
                             users.add(user);
+                            current++;
+                            if (isGetUserSearches) {
+                                printProgress(current, false);
+                            }
                             siteScroller.scrollToElement(people);
                             int n = users.size();
                             progressPrinter.printProgress(n, false);
@@ -84,6 +90,9 @@ public class TwitterUserScraper extends Scraper {
                                 JsonFileManager.toJson(saveFile, users, false);
                             }
                             Thread.sleep(200);
+                            if (users.size() >= maxUsers) {
+                                break;
+                            }
                         }
                     }
                     catch (Exception e) {
@@ -339,6 +348,7 @@ public class TwitterUserScraper extends Scraper {
         }
         System.out.println("Get users...");
         Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
+        if (temp == null) temp = new HashSet<>();
 //        users = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
         JsonFileManager.toJson(USER_IDS_SCRAPE_BACKUP_FILE, temp, false);
         users = getUsers(maxUsers, 1000, 0, USER_IDS_SCRAPE_FILE);
@@ -354,15 +364,21 @@ public class TwitterUserScraper extends Scraper {
     public void getUserSearches(int maxUsers, String... queries) throws InterruptedException {
         int m = queries.length;
         progressPrinter = new ProgressPrinter("Get users", maxUsers);
+        isGetUserSearches = true;
+        JsonFileManager.toJson(USER_IDS_SCRAPE_FILE, new HashSet<>(), true);
         for (String query : queries) {
             Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
+            if (temp == null) temp = new HashSet<>();
+//            Set<String> temp = new HashSet<>();
 //            progressPrinter.printProgress(Math.min(maxUsers, temp.size()), false);
-            printProgress(Math.min(maxUsers, temp.size()), false);
+//            printProgress(Math.min(maxUsers, temp.size()), false);
+//            System.err.println(temp.size() + " " + query);
             if (temp.size() >= maxUsers) {
                 break;
             }
             getUserSearch(query, maxUsers);
         }
+        isGetUserSearches = true;
 //        progressPrinter.printProgress(maxUsers, true);
         printProgress(maxUsers, true);
     }

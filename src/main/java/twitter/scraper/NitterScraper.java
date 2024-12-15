@@ -20,21 +20,21 @@ public class NitterScraper extends Scraper {
         siteQuery = new NitterQuery(driver);
         nitterTweetScraper = new NitterTweetScraper(driver, siteScroller, siteQuery);
         nitterUserScraper = new NitterUserScraper(driver, siteScroller, siteQuery);
-        siteQuery.goToHome();
-        try {
-            Thread.sleep(3000);
-        }
-        catch (InterruptedException _) {}
+//        siteQuery.goToHome();
+//        try {
+//            Thread.sleep(3000);
+//        }
+//        catch (InterruptedException _) {}
     }
     public NitterScraper(WebDriver driver) {
         super(driver);
         siteQuery = new NitterQuery(driver);
         nitterTweetScraper = new NitterTweetScraper(driver, siteScroller, siteQuery);
         nitterUserScraper = new NitterUserScraper(driver, siteScroller, siteQuery);
-        siteQuery.goToHome();
-        try {
-            Thread.sleep(3000);
-        }
-        catch (InterruptedException _) {}
+//        siteQuery.goToHome();
+//        try {
+//            Thread.sleep(3000);
+//        }
+//        catch (InterruptedException _) {}
     }
 }

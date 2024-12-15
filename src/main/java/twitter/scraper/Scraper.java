@@ -1,5 +1,7 @@
 package twitter.scraper;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +25,8 @@ public class Scraper {
     protected SiteScroller siteScroller;
     protected SiteQuery siteQuery;
     protected ProgressPrinter progressPrinter;
-    protected TaskVoid task;
+    protected DoubleProperty progress;
+    protected StringProperty message;
 
     public Scraper(String proxy, boolean headless) {
         driver = DriverManager.initializeDriver(proxy, headless);
@@ -44,11 +47,10 @@ public class Scraper {
     }
 
     public void printProgress(int progress, boolean forced) {
+//        System.err.println(this.progress + " " + this.message);
         progressPrinter.printProgress(progress, forced);
-        if (task != null) {
-            task.updateProgress(progressPrinter.getLastPercent(), progressPrinter.getMAX_PERCENT());
-            task.updateMessage(progressPrinter.getLastMessage());
-        }
+        this.progress.set((double)progressPrinter.getLastPercent() / progressPrinter.getMAX_PERCENT());
+        this.message.set(progressPrinter.getLastMessage());
     }
 
     public void quitDriver() {
