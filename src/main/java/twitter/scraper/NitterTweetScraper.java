@@ -165,7 +165,7 @@ public class NitterTweetScraper extends Scraper {
             limit = numberOfUsers;
         }
         int numSearchString = searchStrings.length;
-        ProgressPrinter progressPrinter = new ProgressPrinter("get tweets", limit);
+        progressPrinter = new ProgressPrinter("Get tweets", limit);
         for (User user : userIds.values()) {
             if (counter >= limit) {
                 break;
@@ -189,7 +189,9 @@ public class NitterTweetScraper extends Scraper {
             counter++;
 //            JsonFileManager.toJsonFromMap(USER_TWEETS_SCRAPE_FILE, users, false);
             JsonFileManager.toJson(USER_TWEETS_SCRAPE_FILE, users, false);
-            progressPrinter.printProgress(counter, false);
+//            progressPrinter.printProgress(counter, false);
+            printProgress(counter, false);
         }
+        printProgress(counter, true);
     }
 }

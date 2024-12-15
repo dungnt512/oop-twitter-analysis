@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.openqa.selenium.*;
 import twitter.controller.JsonFileManager;
 import twitter.entity.LoginAccount;
+import twitter.entity.ProgressPrinter;
 import twitter.navigators.*;
 
 import java.util.*;

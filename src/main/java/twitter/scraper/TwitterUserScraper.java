@@ -136,26 +136,7 @@ public class TwitterUserScraper extends Scraper {
         return users;
     }
 
-    public User getUserFollowers(User user) throws InterruptedException {
-        String userId = user.getUsername();
-        siteQuery.goToUser(userId, TwitterQuery.USER_VERIFIED_FOLLOWERS);
-        Thread.sleep(3000);
-        Set<String> userIds;
-        userIds = getUsers(200, 600, -1, null);
-        user.getFollowers().addAll(userIds);
-        siteQuery.goToUser(userId, TwitterQuery.USER_FOLLOWERS);
-        Thread.sleep(3000);
-        userIds = getUsers(200, 600, -1, null);
-        user.getFollowers().addAll(userIds);
-        return user;
-    }
-    public void getUsersFollowers(int limit) throws InterruptedException {
-        Map<String, User> users = new HashMap<>();
-        Set<String> userIds;
-
-        System.err.println("Preparing to get Followers...");
-        userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
-        users = JsonFileManager.fromJson(USER_FOLLOWERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+    public void normaliseUser(Map<String, User> users) {
         List<String> deleteIds = new ArrayList<>();
         List<User> addedUsers = new ArrayList<>();
         for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -175,8 +156,58 @@ public class TwitterUserScraper extends Scraper {
                 followers.add(User.removeAtSign(id));
             }
             user.setFollowers(followers);
+            List<String> following = new ArrayList<>();
+            for (String id : user.getFollowing()) {
+                following.add(User.removeAtSign(id));
+            }
+            user.setFollowing(following);
+
             users.put(user.getUsername(), user);
         }
+    }
+
+    public User getUserFollowers(User user) throws InterruptedException {
+        String userId = user.getUsername();
+        siteQuery.goToUser(userId, TwitterQuery.USER_VERIFIED_FOLLOWERS);
+        Thread.sleep(3000);
+        Set<String> userIds;
+        userIds = getUsers(200, 600, -1, null);
+        user.getFollowers().addAll(userIds);
+        siteQuery.goToUser(userId, TwitterQuery.USER_FOLLOWERS);
+        Thread.sleep(3000);
+        userIds = getUsers(200, 600, -1, null);
+        user.getFollowers().addAll(userIds);
+        return user;
+    }
+    public void getUsersFollowers(int limit) throws InterruptedException {
+        Map<String, User> users;
+        Set<String> userIds;
+
+        System.err.println("Preparing to get Followers...");
+        userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
+        users = JsonFileManager.fromJson(USER_FOLLOWERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        normaliseUser(users);
+//        List<String> deleteIds = new ArrayList<>();
+//        List<User> addedUsers = new ArrayList<>();
+//        for (Map.Entry<String, User> entry : users.entrySet()) {
+//            String userId = entry.getKey();
+//            if (userId.charAt(0) == '@') {
+//                deleteIds.add(userId);
+//                addedUsers.add(entry.getValue());
+//            }
+//        }
+//        for (String id : deleteIds) {
+//            users.remove(id);
+//        }
+//        for (User user : addedUsers) {
+//            user.setUsername(User.removeAtSign(user.getUsername()));
+//            List<String> followers = new ArrayList<>();
+//            for (String id : user.getFollowers()) {
+//                followers.add(User.removeAtSign(id));
+//            }
+//            user.setFollowers(followers);
+//            users.put(user.getUsername(), user);
+//        }
         JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, users, true);
 
         int counter = 0, numberOfUsers = userIds.size();
@@ -184,7 +215,7 @@ public class TwitterUserScraper extends Scraper {
             limit = numberOfUsers;
         }
 
-        ProgressPrinter progressPrinter = new ProgressPrinter("get followers", limit);
+        progressPrinter = new ProgressPrinter("Get followers", limit);
         for (String userId : userIds) {
             if (users.containsKey(userId) && (users.get(userId) != null && !users.get(userId).getFollowers().isEmpty())) {
                 System.err.println("Followers of '" + userId + "' is already scraped!");
@@ -223,6 +254,76 @@ public class TwitterUserScraper extends Scraper {
         progressPrinter.printProgress(counter, true);
     }
 
+    public User getUserFollowing(User user) throws InterruptedException {
+        String userId = user.getUsername();
+        siteQuery.goToUser(userId, TwitterQuery.USER_FOLLOWING);
+        Thread.sleep(3000);
+        Set<String> userIds;
+        userIds = getUsers(200, 600, -1, null);
+        user.getFollowing().addAll(userIds);
+        return user;
+    }
+
+    public void getUsersFollowing(int limit) throws InterruptedException {
+        Map<String, User> users;
+        Set<String> userIds;
+
+        System.err.println("Preparing to get Following...");
+        users = JsonFileManager.fromJson(USER_FOLLOWING_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
+
+//        List<String> deleteIds = new ArrayList<>();
+//        List<User> addedUsers = new ArrayList<>();
+//        for (Map.Entry<String, User> entry : users.entrySet()) {
+//            String userId = entry.getKey();
+//            if (userId.charAt(0) == '@') {
+//                deleteIds.add(userId);
+//                addedUsers.add(entry.getValue());
+//            }
+//        }
+//        for (String id : deleteIds) {
+//            users.remove(id);
+//        }
+//        for (User user : addedUsers) {
+//            user.setUsername(User.removeAtSign(user.getUsername()));
+//            List<String> following = new ArrayList<>();
+//            for (String id : user.getFollowing()) {
+//                following.add(User.removeAtSign(id));
+//            }
+//            user.setFollowing(following);
+//            users.put(user.getUsername(), user);
+//        }
+        normaliseUser(users);
+        JsonFileManager.toJson(USER_FOLLOWING_SCRAPE_FILE, users, true);
+
+        int counter = 0, numberOfUsers = userIds.size();
+        if (limit == 0) {
+            limit = numberOfUsers;
+        }
+
+        progressPrinter = new ProgressPrinter("Get following", limit);
+        for (String userId : userIds) {
+            if (users.containsKey(userId) && (users.get(userId) != null && !users.get(userId).getFollowing().isEmpty())) {
+                System.err.println("Following of '" + userId + "' is already scraped!");
+                counter++;
+                continue;
+            }
+
+            User user = new User(userId);
+            user = getUserFollowing(user);
+            users.put(userId, user);
+            counter++;
+            JsonFileManager.toJson(USER_FOLLOWING_SCRAPE_FILE, users, true);
+            progressPrinter.printProgress(counter, false);
+            if (counter >= limit) {
+                break;
+            }
+        }
+
+        JsonFileManager.toJson(USER_FOLLOWING_SCRAPE_FILE, users, true);
+        progressPrinter.printProgress(counter, true);
+    }
+
     public void getUserSearch(String query, int maxUsers) throws InterruptedException {
         Set<String> users;
         if (query == null || query.isEmpty()) {
@@ -252,15 +353,17 @@ public class TwitterUserScraper extends Scraper {
 
     public void getUserSearches(int maxUsers, String... queries) throws InterruptedException {
         int m = queries.length;
-        ProgressPrinter progressPrinter = new ProgressPrinter("Get users", maxUsers);
+        progressPrinter = new ProgressPrinter("Get users", maxUsers);
         for (String query : queries) {
             Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
-            progressPrinter.printProgress(Math.min(maxUsers, temp.size()), false);
+//            progressPrinter.printProgress(Math.min(maxUsers, temp.size()), false);
+            printProgress(Math.min(maxUsers, temp.size()), false);
             if (temp.size() >= maxUsers) {
                 break;
             }
             getUserSearch(query, maxUsers);
         }
-        progressPrinter.printProgress(maxUsers, true);
+//        progressPrinter.printProgress(maxUsers, true);
+        printProgress(maxUsers, true);
     }
 }

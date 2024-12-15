@@ -14,12 +14,11 @@ public class ProgressPrinter {
     private final long startTime;
     private final int percent;
     private final int total;
+    private int lastPercent = 0;
+    private String lastMessage;
+
     public ProgressPrinter(String name, int total) {
-        this.name = name;
-        this.total = total;
-        this.startTime = System.nanoTime();
-        this.currentTime = startTime;
-        this.percent = Math.max(1, 1000 / total);
+        this(name, total, Math.max(1, 1000 / total));
     }
     public ProgressPrinter(String name, int total, int percent) {
         if (percent < 1) {
@@ -31,6 +30,7 @@ public class ProgressPrinter {
         this.percent = percent;
         this.startTime = System.nanoTime();
         this.currentTime = startTime;
+        this.lastMessage = "Processing '" + name + "'... (" + 0 + "%/100%)[" + current + "/" + total + "]";
     }
 
     public void printProgress(int nextValue, boolean forced) {
@@ -53,8 +53,13 @@ public class ProgressPrinter {
             }
 
             current = nextValue;
-            System.out.println("Processing '" + name + "'... (" + currentPercent + "%/100%)[" + current + "/" + total + "] --- about "
-                    + TimePrinter.getConvertedApproximateTime(remaining) + " left");
+            String message = "Processing '" + name + "'... (" + currentPercent + "%/100%)[" + current + "/" + total + "]";
+            if (remaining < Long.MAX_VALUE) {
+                message += " --- about " + TimePrinter.getConvertedApproximateTime(remaining) + " left";
+            }
+            lastPercent = currentPercent;
+            lastMessage = message;
+            System.out.println(message);
         }
     }
 

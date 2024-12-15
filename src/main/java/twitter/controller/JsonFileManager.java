@@ -29,7 +29,7 @@ public class JsonFileManager {
         }
         catch (Exception e) {
             System.out.println("Accessing '" + file + "' error.");
-            e.printStackTrace();
+//            e.printStackTrace();
             return value;
         }
         return value;

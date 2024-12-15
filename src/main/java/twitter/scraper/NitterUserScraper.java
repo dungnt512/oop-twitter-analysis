@@ -19,11 +19,11 @@ import java.util.*;
 @Getter
 @Setter
 @AllArgsConstructor
-public class NitterUserScraper extends  Scraper {
+public class NitterUserScraper extends Scraper {
     private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
     private final String USER_EXCLUDE_FILE = DATA_ROOT_DIR + "userExclude.json";
-    private final int MINIMUM_FOLLOWERS_COUNT = 150;
+    private int MINIMUM_FOLLOWERS_COUNT = 150;
 
     public NitterUserScraper(WebDriver driver, SiteScroller siteScroller, SiteQuery siteQuery) {
         super(driver, siteScroller, siteQuery);
@@ -87,7 +87,7 @@ public class NitterUserScraper extends  Scraper {
         if (limit == 0) {
             limit = numberOfUsers;
         }
-        ProgressPrinter progressPrinter = new ProgressPrinter("get users' information", limit);
+        progressPrinter = new ProgressPrinter("Get user profile", limit);
         Set<String> excludeUser = JsonFileManager.fromJson(USER_EXCLUDE_FILE, true, new TypeToken<Set<String>>() {}.getType());
         if (excludeUser == null) excludeUser = new HashSet<>();
         int counter = 0;
@@ -122,7 +122,8 @@ public class NitterUserScraper extends  Scraper {
                 users.put(userId, user);
 //                JsonFileManager.toJsonFromMap(USERS_SCRAPE_FILE, users, false);
                 JsonFileManager.toJson(USER_EXCLUDE_FILE, users, false);
-                progressPrinter.printProgress(counter, false);
+//                progressPrinter.printProgress(counter, false);
+                printProgress(counter, false);
             }
             else {
                 System.err.println("Followers of " + userId + " is too low! Remove from list");
@@ -134,6 +135,7 @@ public class NitterUserScraper extends  Scraper {
         List<User> userList = new ArrayList<>(users.values());
         userList.sort(new User.SortUsers());
         userIds.removeAll(excludeUser);
+        printProgress(counter, true);
         JsonFileManager.toJson(USER_EXCLUDE_FILE, excludeUser, true);
         JsonFileManager.toJson(USER_IDS_SCRAPE_FILE, userIds, true);
         JsonFileManager.toJson(USERS_SCRAPE_FILE, users, true);
