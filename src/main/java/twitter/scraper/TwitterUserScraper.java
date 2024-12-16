@@ -195,7 +195,10 @@ public class TwitterUserScraper extends Scraper {
         System.err.println("Preparing to get Followers...");
         userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
         users = JsonFileManager.fromJson(USER_FOLLOWERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        if (users == null) users = new HashMap<>();
         normaliseUser(users);
+
+        if (userIds == null) userIds = new HashSet<>();
 //        List<String> deleteIds = new ArrayList<>();
 //        List<User> addedUsers = new ArrayList<>();
 //        for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -237,7 +240,7 @@ public class TwitterUserScraper extends Scraper {
             users.put(userId, user);
             counter++;
             JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, users, true);
-            progressPrinter.printProgress(counter, false);
+            printProgress(counter, false);
             if (counter >= limit) {
                 break;
             }
@@ -260,7 +263,7 @@ public class TwitterUserScraper extends Scraper {
 //        }
 
         JsonFileManager.toJson(USER_FOLLOWERS_SCRAPE_FILE, users, true);
-        progressPrinter.printProgress(counter, true);
+        printProgress(counter, true);
     }
 
     public User getUserFollowing(User user) throws InterruptedException {
@@ -279,7 +282,9 @@ public class TwitterUserScraper extends Scraper {
 
         System.err.println("Preparing to get Following...");
         users = JsonFileManager.fromJson(USER_FOLLOWING_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        if (users == null) users = new HashMap<>();
         userIds = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, true, Set.class);
+        if (userIds == null) userIds = new HashSet<>();
 
 //        List<String> deleteIds = new ArrayList<>();
 //        List<User> addedUsers = new ArrayList<>();
@@ -323,14 +328,14 @@ public class TwitterUserScraper extends Scraper {
             users.put(userId, user);
             counter++;
             JsonFileManager.toJson(USER_FOLLOWING_SCRAPE_FILE, users, true);
-            progressPrinter.printProgress(counter, false);
+            printProgress(counter, false);
             if (counter >= limit) {
                 break;
             }
         }
 
         JsonFileManager.toJson(USER_FOLLOWING_SCRAPE_FILE, users, true);
-        progressPrinter.printProgress(counter, true);
+        printProgress(counter, true);
     }
 
     public void getUserSearch(String query, int maxUsers) throws InterruptedException {

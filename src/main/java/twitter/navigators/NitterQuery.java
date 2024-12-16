@@ -38,7 +38,7 @@ public class NitterQuery implements SiteQuery {
         }
         String url = NITTER_HOME_PAGE + query + '/';
         if (!tab.isEmpty()) {
-            url += "/" + tab;
+            url += tab;
         }
         System.out.println("Get users of '" + query + "' in tab '" + tab + "'...");
         driver.get(url);

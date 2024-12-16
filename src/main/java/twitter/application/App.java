@@ -106,6 +106,7 @@ public class App extends Application {
             };
             controller.getProgressBar().progressProperty().bind(task.progressProperty());
             controller.setXScraper(scraper);
+            controller.setStage(primaryStage);
 //            controller.setProgressMessageProperty();
             Label label = controller.getHelloLabel();
             label.setText("Hello " + loginAccount.getName() + " (" + loginAccount.getUsername() + ")! Welcome to X Scraper!");

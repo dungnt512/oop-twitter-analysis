@@ -9,28 +9,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.DirectoryChooser;
 import twitter.controller.JsonFileManager;
-import twitter.entity.ProgressPrinter;
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
-import io.github.palexdev.materialfx.effects.Interpolators;
-import io.github.palexdev.materialfx.utils.AnimationUtils.KeyFrames;
-import io.github.palexdev.materialfx.utils.AnimationUtils.PauseBuilder;
-import io.github.palexdev.materialfx.utils.AnimationUtils.TimelineBuilder;
-import javafx.animation.Animation;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import twitter.entity.ProgressPrinter;
 import twitter.entity.TaskVoid;
 import twitter.entity.User;
 import twitter.scraper.XScraper;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Label;
 import javafx.geometry.*;
-import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import com.google.gson.Gson;
@@ -41,9 +32,11 @@ import com.google.gson.stream.JsonReader;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 @Getter
@@ -52,6 +45,14 @@ public class ScraperPageController implements Initializable {
     private final String DATA_ROOT_DIR = "data/";
     private final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
+    private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
+    private final String USER_FOLLOWERS_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowers.json";
+    private final String USER_FOLLOWING_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowing.json";
+    private final String USER_TWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userTweets.json";
+    private final String USER_RETWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userRetweets.json";
+    private final String USER_COMMENTS_SCRAPE_FILE = DATA_ROOT_DIR + "userComments.json";
+
+    private Stage stage;
 
     @FXML
     private MFXProgressBar progressBar;
@@ -311,29 +312,37 @@ public class ScraperPageController implements Initializable {
         progressMessageLabel.textProperty().bind(task.messageProperty());
     }
 
-    int allDataScraperCounter = 0;
     class allDataScraperTask extends TaskVoid {
         @Override
         protected Void call() throws Exception {
 //            setProgressMessageProperty();
             disableAllButtons();
             setProgressMessageProperty();
+            int allDataScraperCounter = 0;
+            if (userProfileCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
+            if (followersCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
+            if (followingCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
+            if (tweetsCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
             new Thread(()-> {
                 try {
                     if (userProfileCheckbox.isSelected()) {
-                        allDataScraperCounter++;
                         runUserProfileScraper(this);
                     }
                     if (followersCheckbox.isSelected()) {
-                        allDataScraperCounter++;
                         runFollowersScraper(this);
                     }
                     if (followingCheckbox.isSelected()) {
-                        allDataScraperCounter++;
                         runFollowingScraper(this);
                     }
                     if (tweetsCheckbox.isSelected()) {
-                        allDataScraperCounter++;
                         runTweetScraper(this);
                     }
 
@@ -343,6 +352,7 @@ public class ScraperPageController implements Initializable {
             }).start();
 
             while (allDataScraperCounter-- > 0) {
+                System.err.println(progressProperty.get() + " " + messageProperty.get());
                 do {
                     updateProgress(progressProperty.get(), 1.0);
                     updateMessage(messageProperty.get());
@@ -408,9 +418,9 @@ public class ScraperPageController implements Initializable {
         new Thread(task).start();
     }
 
-    private void uploadJsonFile(Stage stage, Type type) throws IOException {
+    private void uploadJsonFile(Type type) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open JSON File");
+        fileChooser.setTitle("Upload JSON File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
         File file = fileChooser.showOpenDialog(stage);
@@ -428,17 +438,22 @@ public class ScraperPageController implements Initializable {
         }
     }
 
-    private void downloadJsonFile(Stage stage, Type type) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save JSON File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+    private void downloadJsonFile(String filePath) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Download JSON " + filePath);
 
-        File file = fileChooser.showSaveDialog(stage);
-        if (file != null) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-//                writer.write(jsonDisplayArea.getText());
-            } catch (IOException ex) {
-//                jsonDisplayArea.setText("Error saving file: " + ex.getMessage());
+        File downloadFile = new File(filePath);
+
+        File folder = directoryChooser.showDialog(stage);
+        if (folder != null) {
+            Path downloadFilePath = downloadFile.toPath();
+            Path folderPath = folder.toPath();
+            try {
+                Files.copy(downloadFilePath, folderPath.resolve(downloadFilePath.getFileName()));
+            }
+            catch (IOException ex) {
+                //noinspection CallToPrintStackTrace
+                ex.printStackTrace();
             }
         }
     }

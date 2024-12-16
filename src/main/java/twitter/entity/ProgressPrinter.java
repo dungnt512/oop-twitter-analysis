@@ -35,7 +35,8 @@ public class ProgressPrinter {
 
     public void printProgress(int nextValue, boolean forced) {
         assert percent > 0;
-        if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
+//        if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
+        if (forced || nextValue == total || nextValue > current) {
             int currentPercent = (nextValue * MAX_PERCENT / total);
             if (forced) {
                 currentPercent = MAX_PERCENT;
