@@ -25,12 +25,20 @@ public class Tweet extends TweetObject {
             return Long.compare(B, A);
         }
     }
+    public static String removeSharpEnd(String id) {
+        String[] split = id.split("#");
+        return split[0];
+    }
+    public static String getTweetId(String tweetLink) {
+        String[] split = tweetLink.split("/");
+        return removeSharpEnd(split[split.length - 1]);
+    }
 
     private String tweetId;
     private String tweetLink;
     private int numberOfComments = 0, numberOfRetweets = 0, numberOfQuotes = 0, numberOfHearts = 0;
-    private List<String> comments;
-    private List<String> retweets;
+    private List<String> comments = new ArrayList<>();
+    private List<String> retweets = new ArrayList<>();
 
     public Tweet(String tweetLink) {
         this.typeName = "tweet";

@@ -20,6 +20,7 @@ import javafx.stage.StageStyle;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.chrome.ChromeDriver;
 import twitter.entity.LoginAccount;
+import twitter.entity.TaskVoid;
 import twitter.scraper.XScraper;
 
 import java.io.IOException;
@@ -93,17 +94,7 @@ public class App extends Application {
             Scene scene = new Scene(loader.load());
 
             ScraperPageController controller = loader.getController();
-            Task<Void> task = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    int step = 100;
-                    for (int i = 0; i <= step; i++) {
-                        updateProgress(i, step);
-                        Thread.sleep(25);
-                    }
-                    return null;
-                }
-            };
+            TaskVoid task = TaskVoid.testTask();
             controller.getProgressBar().progressProperty().bind(task.progressProperty());
             controller.setXScraper(scraper);
             controller.setStage(primaryStage);

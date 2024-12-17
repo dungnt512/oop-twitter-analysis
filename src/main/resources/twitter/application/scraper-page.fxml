@@ -32,11 +32,11 @@
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="userListUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="51.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="userListUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="51.0" onMouseClicked="#handleUploadUserList" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="userListDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="51.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="userListDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="51.0" onMouseClicked="#handleDownloadUserList" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -45,11 +45,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="userProfileUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="296.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="userProfileUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="296.0" onMouseClicked="#handleUploadUserProfile" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="userProfileDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="296.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="userProfileDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="296.0" onMouseClicked="#handleDownloadUserProfile" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -58,11 +58,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="followersUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="333.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="followersUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="333.0" onMouseClicked="#handleUploadUserFollowers" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="followersDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="333.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="followersDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="333.0" onMouseClicked="#handleDownloadUserFollowers" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -71,11 +71,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="followingUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="371.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="followingUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="371.0" onMouseClicked="#handleUploadUserFollowing" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="followingDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="451.0" layoutY="371.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="followingDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="451.0" layoutY="371.0" onMouseClicked="#handleDownloadUserFollowing" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -84,11 +84,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="tweetsUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="424.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="tweetsUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="424.0" onMouseClicked="#handleUploadUserTweets" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="tweetsDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="424.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="tweetsDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="424.0" onMouseClicked="#handleDownloadUserTweets" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -97,11 +97,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="commentUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="461.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="commentUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="461.0" onMouseClicked="#handleUploadUserComments" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="commentDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="461.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="commentDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="461.0" onMouseClicked="#handleDownloadUserComments" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -110,11 +110,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton fx:id="reTweetUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="499.0" style="-fx-background-color: -mfx-red;" text="Upload">
+            <MFXButton fx:id="reTweetUploadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="378.0" layoutY="499.0" onMouseClicked="#handleUploadUserRetweets" style="-fx-background-color: -mfx-red;" text="Upload">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton fx:id="reTweetDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="499.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="reTweetDownloadButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="450.0" layoutY="499.0" onMouseClicked="#handleDownloadUserRetweets" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -193,5 +193,10 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
+      <MFXButton fx:id="exitButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="1134.0" layoutY="46.0" onMouseClicked="#exit" style="-fx-background-color: -mfx-red;" text="Exit">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </MFXButton>
    </children>
 </AnchorPane>

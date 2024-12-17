@@ -3,6 +3,7 @@ package twitter.application;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -119,6 +120,9 @@ public class ScraperPageController implements Initializable {
     @FXML
     private MFXButton allDataDownloadButton;
 
+    @FXML
+    private MFXButton exitButton;
+
     private XScraper xScraper;
 
     @SuppressWarnings("unchecked")
@@ -154,6 +158,20 @@ public class ScraperPageController implements Initializable {
                 new IntegerFilter<>("Following", User::getFollowingCount)
         );
         userTable.setItems(userList);
+    }
+
+    private long lastExitTime = 0;
+    private final int exitMaxDuration = 500;
+    @FXML
+    private void exit() {
+        if (System.currentTimeMillis() - lastExitTime < exitMaxDuration) {
+            xScraper.quitDriver();
+            stage.close();
+            Platform.exit();
+        }
+        else {
+            lastExitTime = System.currentTimeMillis();
+        }
     }
 
     private final String DEFAULT_SEARCH_QUERY = "blockchain, crypto, ethereum, #blockchain, #crypto";
@@ -418,22 +436,90 @@ public class ScraperPageController implements Initializable {
         new Thread(task).start();
     }
 
-    private void uploadJsonFile(Type type) throws IOException {
+    @FXML
+    private void handleUploadUserList() throws IOException {
+        uploadJsonFile(USER_IDS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserList() throws IOException {
+        downloadJsonFile(USER_IDS_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserProfile() throws IOException {
+        uploadJsonFile(USERS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserProfile() throws IOException {
+        downloadJsonFile(USERS_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserFollowers() throws IOException {
+        uploadJsonFile(USER_FOLLOWERS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserFollowers() throws IOException {
+        downloadJsonFile(USER_FOLLOWERS_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserFollowing() throws IOException {
+        uploadJsonFile(USER_FOLLOWING_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserFollowing() throws IOException {
+        downloadJsonFile(USER_FOLLOWING_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserTweets() throws IOException {
+        uploadJsonFile(USER_TWEETS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserTweets() throws IOException {
+        downloadJsonFile(USER_TWEETS_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserRetweets() throws IOException {
+        uploadJsonFile(USER_RETWEETS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserRetweets() throws IOException {
+        downloadJsonFile(USER_RETWEETS_SCRAPE_FILE);
+    }
+
+    @FXML
+    private void handleUploadUserComments() throws IOException {
+        uploadJsonFile(USER_COMMENTS_SCRAPE_FILE);
+    }
+    @FXML
+    private void handleDownloadUserComments() throws IOException {
+        downloadJsonFile(USER_COMMENTS_SCRAPE_FILE);
+    }
+
+
+    private void uploadJsonFile(String fileName) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Upload JSON File");
+        fileChooser.setTitle("Upload JSON " + fileName);
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+
+        File uploadFile = new File(fileName);
 
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                StringBuilder content = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    content.append(line).append("\n");
-                }
-//                jsonDisplayArea.setText(content.toString());
-            } catch (IOException ex) {
-//                jsonDisplayArea.setText("Error loading file: " + ex.getMessage());
+            Path uploadFilePath = uploadFile.getParentFile().toPath();
+            Path filePath = file.toPath();
+            TaskVoid task = TaskVoid.testTask();
+            setProgress(task);
+            try {
+                Files.copy(filePath, uploadFilePath.resolve(uploadFile.getName()));
+            }
+            catch (IOException e) {
+                progressMessageLabel.setText("Upload failed!");
+                //noinspection CallToPrintStackTrace
+                e.printStackTrace();
             }
         }
     }
@@ -446,12 +532,16 @@ public class ScraperPageController implements Initializable {
 
         File folder = directoryChooser.showDialog(stage);
         if (folder != null) {
+//            System.err.println(downloadFile.toPath() + " " + folder.toPath());
             Path downloadFilePath = downloadFile.toPath();
             Path folderPath = folder.toPath();
+            TaskVoid task = TaskVoid.testTask();
+            setProgress(task);
             try {
                 Files.copy(downloadFilePath, folderPath.resolve(downloadFilePath.getFileName()));
             }
             catch (IOException ex) {
+                progressMessageLabel.setText("Download failed!");
                 //noinspection CallToPrintStackTrace
                 ex.printStackTrace();
             }

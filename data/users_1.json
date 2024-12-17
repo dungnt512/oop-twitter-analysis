@@ -1,0 +1,67 @@
+{
+  "AlexCryptoDubai": {
+    "username": "AlexCryptoDubai",
+    "location": "Blockchain",
+    "joinDate": "Joined October 2016",
+    "tweetsCount": 18303,
+    "followersCount": 3039,
+    "followingCount": 1616,
+    "likesCount": 59955,
+    "followers": [],
+    "following": [],
+    "tweets": [],
+    "typeName": "user"
+  },
+  "SpartaN_PL1": {
+    "username": "SpartaN_PL1",
+    "location": "Zürich",
+    "joinDate": "Joined October 2022",
+    "tweetsCount": 3169,
+    "followersCount": 5262,
+    "followingCount": 223,
+    "likesCount": 3145,
+    "followers": [],
+    "following": [],
+    "tweets": [],
+    "typeName": "user"
+  },
+  "AstariaXYZ": {
+    "username": "AstariaXYZ",
+    "location": "Ethereum",
+    "joinDate": "Joined January 2022",
+    "tweetsCount": 980,
+    "followersCount": 14042,
+    "followingCount": 22,
+    "likesCount": 614,
+    "followers": [],
+    "following": [],
+    "tweets": [],
+    "typeName": "user"
+  },
+  "shabancrypto": {
+    "username": "shabancrypto",
+    "location": "London, England",
+    "joinDate": "Joined April 2021",
+    "tweetsCount": 1429,
+    "followersCount": 39464,
+    "followingCount": 56,
+    "likesCount": 1780,
+    "followers": [],
+    "following": [],
+    "tweets": [],
+    "typeName": "user"
+  },
+  "block_retrieval": {
+    "username": "block_retrieval",
+    "location": "Global",
+    "joinDate": "Joined April 2019",
+    "tweetsCount": 119656,
+    "followersCount": 12677,
+    "followingCount": 6893,
+    "likesCount": 126850,
+    "followers": [],
+    "following": [],
+    "tweets": [],
+    "typeName": "user"
+  }
+}
