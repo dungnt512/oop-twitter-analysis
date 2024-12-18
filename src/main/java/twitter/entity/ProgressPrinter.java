@@ -9,18 +9,18 @@ import lombok.Setter;
 public class ProgressPrinter {
     private final int MAX_PERCENT = 100;
     private final String name;
-    private int current = 0;
+    private long current = 0;
     private long currentTime;
     private final long startTime;
     private final int percent;
-    private final int total;
+    private final long total;
     private int lastPercent = 0;
     private String lastMessage;
 
-    public ProgressPrinter(String name, int total) {
+    public ProgressPrinter(String name, long total) {
         this(name, total, 1);
     }
-    public ProgressPrinter(String name, int total, int percent) {
+    public ProgressPrinter(String name, long total, int percent) {
         if (percent < 1) {
             System.out.println("Value of 'percent' cannot be less than 1. Set 'percent' to 1");
             percent = 1;
@@ -33,11 +33,11 @@ public class ProgressPrinter {
         this.lastMessage = "Processing '" + name + "'... (" + 0 + "%/100%)[" + current + "/" + total + "]";
     }
 
-    public void printProgress(int nextValue, boolean forced) {
+    public void printProgress(long nextValue, boolean forced) {
         assert percent > 0;
 //        if (forced || nextValue == total || nextValue * MAX_PERCENT / total >= current * MAX_PERCENT / total + percent) {
         if (forced || nextValue == total || nextValue > current) {
-            int currentPercent = (nextValue * MAX_PERCENT / total);
+            int currentPercent = (int)(nextValue * MAX_PERCENT / total);
             if (forced) {
                 currentPercent = MAX_PERCENT;
             }
@@ -64,7 +64,7 @@ public class ProgressPrinter {
         }
     }
 
-    public boolean update(int nextValue) {
+    public boolean update(long nextValue) {
         if (nextValue > total) {
             return false;
         }
@@ -73,7 +73,7 @@ public class ProgressPrinter {
 //        printProgress(nextValue, false);
         return true;
     }
-    public boolean increment(int delta) {
+    public boolean increment(long delta) {
         return update(current + delta);
     }
 }

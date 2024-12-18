@@ -85,6 +85,11 @@ public class GraphBuilder {
                 for (Tweet tweet : temp.getTweets()) {
                     Tweet tweetTemp = tweets.getOrDefault(Tweet.getTweetId(tweet.getTweetLink()), null);
                     if (tweetTemp != null) {
+                        List<String> ids = new ArrayList<>();
+                        for (String id : tweet.getComments()) {
+                            ids.add(User.removeAtSign(id));
+                        }
+                        tweetTemp.setComments(ids);
                         tweetTemp.setComments(tweet.getComments());
                     }
                 }
@@ -94,6 +99,11 @@ public class GraphBuilder {
                 for (Tweet tweet : temp.getTweets()) {
                     Tweet tweetTemp = tweets.getOrDefault(Tweet.getTweetId(tweet.getTweetLink()), null);
                     if (tweetTemp != null) {
+                        List<String> ids = new ArrayList<>();
+                        for (String id : tweet.getRetweets()) {
+                            ids.add(User.removeAtSign(id));
+                        }
+                        tweetTemp.setRetweets(ids);
                         tweetTemp.setRetweets(tweet.getRetweets());
                     }
                 }
@@ -104,13 +114,15 @@ public class GraphBuilder {
         JsonFileManager.toJson(USERS_DATA_FILE, users, true);
 
         GraphData graphData = new GraphData();
-        long sumBias = 0;
+        double sumBias = 0;
         Set<String> userIds = new HashSet<>();
         for (Map.Entry<String, User> entry : users.entrySet()) {
             User user = entry.getValue();
-//            graphData.getNodes().add(new GraphUserNode(0, entry.getKey(), user));
-
-            sumBias += user.getFollowersCount() - 1;
+//           graphData.getNodes().add(new GraphUserNode(0, entry.getKey(), user));
+            if (KOLsList.contains(entry.getKey())) {
+//                sumBias += Math.log(user.getFollowersCount());
+                sumBias += user.getFollowersCount();
+            }
             userIds.add(entry.getKey());
             userIds.addAll(user.getFollowers());
             userIds.addAll(user.getFollowing());
@@ -127,7 +139,7 @@ public class GraphBuilder {
         }
 
 //        sumBias += userIds.size();
-        sumBias += KOLsList.size();
+//        sumBias += KOLsList.size();
         Map<String, GraphNode> nodeMap = new HashMap<>();
 
         for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -135,7 +147,7 @@ public class GraphBuilder {
             if (!KOLsList.contains(entry.getKey())) {
                 continue;
             }
-            GraphNode node = new GraphUserNode("kol", (double)user.getFollowersCount() / sumBias, entry.getKey(), user);
+            GraphNode node = new GraphUserNode("kol", (double)user.getFollowersCount(), entry.getKey(), user);
             graphData.getNodes().add(node);
             nodeMap.put(entry.getKey(), node);
         }
@@ -156,13 +168,17 @@ public class GraphBuilder {
         for (Map.Entry<String, User> entry : users.entrySet()) {
             User user = entry.getValue();
             String userId = entry.getKey();
+            if (!KOLsList.contains(userId)) {
+                continue;
+            }
             GraphNode node = nodeMap.get(userId);
             for (String followerId : user.getFollowers()) {
                 GraphNode follower = nodeMap.get(followerId);
                 follower.getEdges().add(new GraphEdge("follow", 1.0, follower, node));
             }
             for (String followingId : user.getFollowing()) {
-                node.getEdges().add(new GraphEdge("following", 1.0, node, nodeMap.get(followingId)));
+                GraphNode following = nodeMap.get(followingId);
+                node.getEdges().add(new GraphEdge("following", 1.0, node, following));
             }
             for (Tweet tweet : user.getTweets()) {
                 GraphNode tweetNode = nodeMap.get(tweet.getTweetId());
@@ -190,7 +206,8 @@ public class GraphBuilder {
         }
         System.err.println();
 
-        graphData.setSumBias(KOLsList.size());
+//        graphData.setSumBias(KOLsList.size());
+        graphData.setSumBias(sumBias);
 //        JsonFileManager.toJson(GRAPH_DATA_FILE, graphData, true);
         return graphData;
     }

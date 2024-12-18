@@ -16,7 +16,7 @@
                   <Font name="System Bold" size="28.0" />
                </font>
             </Label>
-            <MFXButton contentDisplay="CENTER" defaultButton="true" layoutX="171.0" layoutY="357.0" onAction="#handleLogin" onKeyPressed="#handleLogin" onMouseClicked="#handleLogin" prefHeight="40.0" prefWidth="64.0" rippleAnimateShadow="true" rippleColor="#0099ff" style="-fx-background-color: #bdbdbd;" text="Login">
+            <MFXButton contentDisplay="CENTER" defaultButton="true" layoutX="171.0" layoutY="357.0" onAction="#handleLogin" onMouseClicked="#handleLogin" prefHeight="40.0" prefWidth="64.0" rippleAnimateShadow="true" rippleColor="#0099ff" style="-fx-background-color: -mfx-orange;" text="Login">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -26,15 +26,20 @@
             <MFXPasswordField fx:id="passwordField" floatingText="password" layoutX="67.0" layoutY="269.0" prefHeight="49.0" prefWidth="272.0" />
          </children>
       </AnchorPane>
-      <Label layoutX="56.0" layoutY="220.0" text="X Scraper">
+      <Label layoutX="56.0" layoutY="207.0" text="X Scraper">
          <font>
             <Font name="System Bold" size="36.0" />
          </font>
       </Label>
-      <Label layoutX="56.0" layoutY="273.0" text="Login by your X account to using X Scraper">
+      <Label layoutX="56.0" layoutY="260.0" text="Login by your X account to using X Scraper">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+      <MFXButton contentDisplay="CENTER" defaultButton="true" layoutX="56.0" layoutY="300.0" onAction="#handleLoginWithCookies" onMouseClicked="#handleLoginWithCookies" prefHeight="27.0" prefWidth="161.0" rippleAnimateShadow="true" rippleColor="#0099ff" style="-fx-background-color: -mfx-blue;" text="Login by Cookies">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </MFXButton>
    </children>
 </AnchorPane>

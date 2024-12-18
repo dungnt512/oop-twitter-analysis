@@ -38,7 +38,7 @@ public class TwitterLogin implements SiteLogin {
             Thread.sleep(4000);
 
             inputUsername();
-            Thread.sleep(8000);
+            Thread.sleep(3000);
             inputUnusualActivity();
             System.err.println("Preparing password... ");
             inputPassword();

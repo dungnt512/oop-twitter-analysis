@@ -45,7 +45,7 @@ public class TwitterUserScraper extends Scraper {
             retryLimit = 20;
         }
         ProgressPrinter progressPrinter = new ProgressPrinter("get username", maxUsers);
-        int current = this.progressPrinter.getCurrent();
+        long current = this.progressPrinter.getCurrent();
 
         while (users.size() < maxUsers) {
             try {

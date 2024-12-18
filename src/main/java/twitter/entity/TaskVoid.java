@@ -12,7 +12,7 @@ public class TaskVoid extends Task<Void> {
     public void updateMessage(String message) {
         super.updateMessage(message);
     }
-    public static TaskVoid testTask() {
+    public static TaskVoid testTask(String message) {
         return new TaskVoid() {
             @Override
             protected Void call() throws Exception {
@@ -20,9 +20,14 @@ public class TaskVoid extends Task<Void> {
                 int step = 100;
                 for (int i = 0; i <= step; i++) {
                     updateProgress(i, step);
-                    Thread.sleep(25);
+                    Thread.sleep(15);
                 }
-                updateMessage("Process complete!");
+                if (message.isEmpty()) {
+                    updateMessage("Process complete!");
+                }
+                else {
+                    updateMessage(message);
+                }
                 return null;
             }
         };

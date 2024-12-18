@@ -46,7 +46,7 @@ public class Scraper {
         this.siteQuery = siteQuery;
     }
 
-    public void printProgress(int progress, boolean forced) {
+    public void printProgress(long progress, boolean forced) {
 //        System.err.println(this.progress + " " + this.message);
         progressPrinter.printProgress(progress, forced);
         this.progress.set((double)progressPrinter.getLastPercent() / progressPrinter.getMAX_PERCENT());

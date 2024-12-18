@@ -164,6 +164,11 @@
             </MFXCheckbox>
             <MFXTextField fx:id="numberOfUsersTextField" alignment="CENTER" floatMode="ABOVE" layoutX="194.0" layoutY="52.0" prefHeight="29.0" prefWidth="110.0" promptText="numbers (3200)" />
             <MFXTableView fx:id="userTable" layoutX="18.0" layoutY="87.0" prefHeight="206.0" prefWidth="515.0" />
+            <MFXButton fx:id="refreshUserListButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="18.0" layoutY="52.0" onMouseClicked="#handleRefreshUserList" style="-fx-background-color: -mfx-orange;" text="F5" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </MFXButton>
          </children>
       </AnchorPane>
       <MFXProgressBar id="determinateBar" fx:id="progressBar" animationSpeed="0.5" layoutX="75.0" layoutY="780.0" prefHeight="5.0" prefWidth="1080.0" progress="0.42" />
@@ -174,7 +179,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="314.0" layoutY="16.0" style="-fx-background-color: -mfx-green;" text="Run">
+            <MFXButton fx:id="runPageRankButton" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="314.0" layoutY="16.0" onMouseClicked="#handleRunPageRank" style="-fx-background-color: -mfx-green;" text="Run">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
@@ -182,11 +187,11 @@
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXButton alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="448.0" layoutY="16.0" prefWidth="86.0" style="-fx-background-color: -mfx-blue;" text="Download">
+            <MFXButton fx:id="pageRankResultDownload" alignment="BASELINE_CENTER" contentDisplay="CENTER" layoutX="448.0" layoutY="16.0" onMouseClicked="#handleDownloadPageRankResult" prefWidth="86.0" style="-fx-background-color: -mfx-blue;" text="Download">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font></MFXButton>
-            <MFXTableView layoutX="16.0" layoutY="52.0" prefHeight="528.0" prefWidth="515.0" />
+            <MFXTableView fx:id="pageRankResultTable" layoutX="16.0" layoutY="52.0" prefHeight="528.0" prefWidth="515.0" />
          </children>
       </AnchorPane>
       <Label fx:id="progressMessageLabel" layoutX="75.0" layoutY="749.0" prefHeight="17.0" prefWidth="1080.0" text="Processing...">

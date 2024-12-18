@@ -1,6 +1,8 @@
 package twitter.application;
 
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import io.github.palexdev.materialfx.enums.SortState;
+import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.application.Platform;
@@ -10,7 +12,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.scene.control.Hyperlink;
 import javafx.stage.DirectoryChooser;
+import org.openqa.selenium.json.Json;
+import org.testng.internal.Graph;
+import twitter.algorithms.PageRank;
 import twitter.controller.JsonFileManager;
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
@@ -18,8 +25,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import twitter.entity.GraphData;
+import twitter.entity.GraphNode;
 import twitter.entity.TaskVoid;
 import twitter.entity.User;
+import twitter.navigators.TwitterQuery;
 import twitter.scraper.XScraper;
 import javafx.scene.control.Label;
 import javafx.geometry.*;
@@ -30,8 +40,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -52,6 +65,8 @@ public class ScraperPageController implements Initializable {
     private final String USER_TWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userTweets.json";
     private final String USER_RETWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userRetweets.json";
     private final String USER_COMMENTS_SCRAPE_FILE = DATA_ROOT_DIR + "userComments.json";
+    private final String USERS_DATA_FILE = DATA_ROOT_DIR + "user-data.json";
+    private final String PAGE_RANK_DATA_FILE = DATA_ROOT_DIR + "page-rank.json";
 
     private Stage stage;
 
@@ -64,6 +79,8 @@ public class ScraperPageController implements Initializable {
 
     @FXML
     private MFXTableView<User> userTable;
+    @FXML
+    private MFXTableView<GraphNode> pageRankResultTable;
 
     @FXML
     private MFXTextField searchQueryTextField;
@@ -89,6 +106,8 @@ public class ScraperPageController implements Initializable {
     @FXML
     private MFXButton scrapeAllButton;
 
+    @FXML
+    private MFXButton refreshUserListButton;
     @FXML
     private MFXButton userListUploadButton;
     @FXML
@@ -121,43 +140,25 @@ public class ScraperPageController implements Initializable {
     private MFXButton allDataDownloadButton;
 
     @FXML
+    private MFXButton pageRankResultDownload;
+    @FXML
+    private MFXButton runPageRankButton;
+
+    @FXML
     private MFXButton exitButton;
 
     private XScraper xScraper;
+    private PageRank pageRank;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         progressBar.getRanges1().add(NumberRange.of(0.0, 0.30));
         progressBar.getRanges2().add(NumberRange.of(0.31, 0.60));
         progressBar.getRanges3().add(NumberRange.of(0.61, 1.0));
 
-        MFXTableColumn<User> usernameColumn = new MFXTableColumn<>("Username", true, Comparator.comparing(User::getUsername));
-        MFXTableColumn<User> userLinkColumn = new MFXTableColumn<>("Link", true, Comparator.comparing(User::getUserLink));
-        MFXTableColumn<User> followersCountColumn = new MFXTableColumn<>("Followers", true, Comparator.comparing(User::getFollowersCount));
-        MFXTableColumn<User> followingCountColumn = new MFXTableColumn<>("Following", true, Comparator.comparing(User::getFollowingCount));
-
-        usernameColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUsername) {});
-        userLinkColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUserLink) {});
-        followersCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getFollowersCount) {{
-            setAlignment(Pos.CENTER_RIGHT);
-        }});
-        followingCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getFollowingCount) {{
-            setAlignment(Pos.CENTER_RIGHT);
-        }});
-
-        Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, false, new TypeToken<Map<String, User>>(){}.getType());
-        ObservableList<User> userList = FXCollections.observableList(users.values().stream().toList());
-
-//        userTable.getTableColumns().addAll(usernameColumn, userLinkColumn, followersCountColumn, followingCountColumn);
-        userTable.getTableColumns().addAll(usernameColumn, followersCountColumn, followingCountColumn);
-        userTable.getFilters().addAll(
-                new StringFilter<>("Username", User::getUsername),
-//                new StringFilter<>("Link", User::getUserLink),
-                new IntegerFilter<>("Followers", User::getFollowersCount),
-                new IntegerFilter<>("Following", User::getFollowingCount)
-        );
-        userTable.setItems(userList);
+        createUserTableList(userTable, false);
+//        userTable.autosizeColumnsOnInitialization();
+        pageRank = new PageRank();
     }
 
     private long lastExitTime = 0;
@@ -174,13 +175,100 @@ public class ScraperPageController implements Initializable {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void createUserTableList(MFXTableView<User> userTable, boolean refresh) {
+        if (!refresh) {
+            MFXTableColumn<User> usernameColumn = new MFXTableColumn<>("Username", true, Comparator.comparing(User::getUsername));
+            MFXTableColumn<User> userLinkColumn = new MFXTableColumn<>("Link", true, Comparator.comparing(User::getUserLink));
+            MFXTableColumn<User> followersCountColumn = new MFXTableColumn<>("Followers", true, Comparator.comparing(User::getFollowersCount));
+            MFXTableColumn<User> followingCountColumn = new MFXTableColumn<>("Following", true, Comparator.comparing(User::getFollowingCount));
+
+            followersCountColumn.setSortState(SortState.DESCENDING);
+
+            usernameColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUsername) {
+            });
+            userLinkColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUserLink) {{
+                Hyperlink link = new Hyperlink(user.getUserLink());
+                link.setOnAction(event -> {
+                    try {
+                        Desktop.getDesktop().browse(new URI(user.getUserLink()));
+                    } catch (IOException | URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                setGraphic(link);
+            }});
+            followersCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getFollowersCount) {{
+                setAlignment(Pos.CENTER);
+            }});
+            followingCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getFollowingCount) {{
+                setAlignment(Pos.CENTER);
+            }});
+//        userTable.getTableColumns().addAll(usernameColumn, userLinkColumn, followersCountColumn, followingCountColumn);
+
+            userTable.getTableColumns().addAll(usernameColumn, userLinkColumn, followersCountColumn, followingCountColumn);
+            userTable.getFilters().addAll(
+                    new StringFilter<>("Username", User::getUsername),
+                    new StringFilter<>("Link", User::getUserLink),
+                    new IntegerFilter<>("Followers", User::getFollowersCount),
+                    new IntegerFilter<>("Following", User::getFollowingCount)
+            );
+        }
+
+        Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, false, new TypeToken<Map<String, User>>(){}.getType());
+        for (Map.Entry<String, User> entry : users.entrySet()) {
+            User user = entry.getValue();
+            if (user.getUserLink() == null || user.getUserLink().isEmpty()) {
+                user.setUserLink(TwitterQuery.TWITTER_HOME_PAGE + user.getUsername());
+            }
+        }
+        JsonFileManager.toJson(USERS_SCRAPE_FILE, users, true);
+        ObservableList<User> userList = FXCollections.observableList(users.values().stream().toList());
+        userTable.setItems(userList);
+    }
+
+    @FXML
+    private void handleRefreshUserList() {
+        TaskVoid task = new TaskVoid() {
+            @Override
+            protected Void call() throws Exception {
+                updateMessage("Loading KOLs List...");
+                createUserTableList(userTable, true);
+                updateProgress(1, 2);
+//                Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, false, new TypeToken<Map<String, User>>(){}.getType());
+
+//                for (Map.Entry<String, User> entry : users.entrySet()) {
+//                    User user = entry.getValue();
+//                    if (user.getUserLink() == null || user.getUserLink().isEmpty()) {
+//                        user.setUserLink(X_HOME_PAGE + user.getUsername());
+//                    }
+//                }
+//                JsonFileManager.toJson(USERS_SCRAPE_FILE, users, true);
+//                updateProgress(2, 3);
+//                ObservableList<User> userList = FXCollections.observableList(users.values().stream().toList());
+//                userTable.setItems(userList);
+//                updateProgress(3, 3);
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                updateProgress(1, 1);
+                updateMessage("Refresh KOLs List completed!");
+            }
+        };
+        setProgress(task);
+        new Thread(task).start();
+//        createUserTableList(userTable, true);
+    }
+
     private final String DEFAULT_SEARCH_QUERY = "blockchain, crypto, ethereum, #blockchain, #crypto";
     private final int DEFAULT_MIN_FOLLOWERS = 200;
     private final int DEFAULT_NUMBER_OF_USERS = 3200;
     private DoubleProperty progressProperty = new SimpleDoubleProperty(0.0);
     private StringProperty messageProperty = new SimpleStringProperty("Processing...");
 
-    public void setProgressMessageProperty() {
+    private void setProgressMessageProperty() {
 //        System.err.println("+ " + progressProperty + " " + messageProperty);
         progressProperty = new SimpleDoubleProperty(0.0);
         messageProperty = new SimpleStringProperty("Processing...");
@@ -190,6 +278,13 @@ public class ScraperPageController implements Initializable {
         xScraper.getNitterScraper().getNitterUserScraper().setMessage(messageProperty);
         xScraper.getNitterScraper().getNitterTweetScraper().setProgress(progressProperty);
         xScraper.getNitterScraper().getNitterTweetScraper().setMessage(messageProperty);
+    }
+
+    private void setProgressMessagePageRank() {
+        progressProperty = new SimpleDoubleProperty(0.0);
+        messageProperty = new SimpleStringProperty("Processing...");
+        pageRank.setProgress(progressProperty);
+        pageRank.setMessage(messageProperty);
     }
 
     private void runUserListScraper(TaskVoid task) throws InterruptedException {
@@ -319,10 +414,12 @@ public class ScraperPageController implements Initializable {
     private void enableAllButtons() {
         scrapeUserListButton.setDisable(false);
         scrapeAllButton.setDisable(false);
+        runPageRankButton.setDisable(false);
     }
     private void disableAllButtons() {
         scrapeUserListButton.setDisable(true);
         scrapeAllButton.setDisable(true);
+        runPageRankButton.setDisable(true);
     }
 
     private void setProgress(TaskVoid task) {
@@ -499,6 +596,95 @@ public class ScraperPageController implements Initializable {
         downloadJsonFile(USER_COMMENTS_SCRAPE_FILE);
     }
 
+    class runPageRankTask extends TaskVoid {
+        @Override
+        protected Void call() throws Exception {
+//            System.err.println(progressProperty + " " + messageProperty);
+//            System.err.println(xScraper.getProgress() + " " + xScraper.getMessage());
+            disableAllButtons();
+            setProgressMessagePageRank();
+            new Thread(()-> {
+                pageRank.runPageRank();
+            }).start();
+            do {
+                updateProgress(progressProperty.get(), 1.0);
+                updateMessage(messageProperty.get());
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } while (progressProperty.get() < 1.0);
+            updateProgress(1.0, 1.0);
+            updateMessage("PageRank completed!");
+//            System.err.println(getProgress() + " " + getMessage());
+            return null;
+        }
+        @SuppressWarnings("unchecked")
+        protected void succeeded() {
+            super.succeeded();
+            enableAllButtons();
+            MFXTableColumn<GraphNode> usernameColumn = new MFXTableColumn<>("Username", true, Comparator.comparing(GraphNode::getId));
+            MFXTableColumn<GraphNode> userLinkColumn = new MFXTableColumn<>("Link", true, Comparator.comparing(GraphNode::getId));
+            MFXTableColumn<GraphNode> followersCountColumn = new MFXTableColumn<>("Followers", true, Comparator.comparing(GraphNode::getFollowersCount));
+            MFXTableColumn<GraphNode> weightColumn = new MFXTableColumn<>("Weight", true, Comparator.comparing(GraphNode::getWeight));
+
+
+            usernameColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getId) {
+            });
+            userLinkColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getType) {{
+                Hyperlink link = new Hyperlink(user.getType());
+                link.setOnAction(event -> {
+                    try {
+                        Desktop.getDesktop().browse(new URI(user.getType()));
+                    } catch (IOException | URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                setGraphic(link);
+            }});
+
+            followersCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getFollowersCount) {{
+                setAlignment(Pos.CENTER);
+            }});
+            weightColumn.setSortState(SortState.DESCENDING);
+            weightColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getWeight) {{
+                setAlignment(Pos.CENTER);
+            }});
+//        userTable.getTableColumns().addAll(usernameColumn, userLinkColumn, followersCountColumn, followingCountColumn);
+
+            pageRankResultTable.getTableColumns().addAll(usernameColumn, userLinkColumn, followersCountColumn, weightColumn);
+            pageRankResultTable.getFilters().addAll(
+                    new StringFilter<>("Username", GraphNode::getId),
+                    new StringFilter<>("Link", GraphNode::getId),
+                    new IntegerFilter<>("Followers", GraphNode::getFollowersCount),
+                    new DoubleFilter<>("Weight", GraphNode::getWeight)
+            );
+            GraphData pageRankData = JsonFileManager.fromJson(PAGE_RANK_DATA_FILE, true, GraphData.class);
+            ObservableList<GraphNode> pageRankUserList = FXCollections.observableList(pageRankData.getNodes());
+            pageRankResultTable.setItems(pageRankUserList);
+            System.out.println(progressProperty().getValue() + " " + messageProperty().getValue());
+        }
+        protected void failed() {
+            super.failed();
+//            System.err.println(exceptionProperty().get().getMessage());
+            System.err.println("Failed!");
+            enableAllButtons();
+        }
+    }
+    @FXML
+    private void handleDownloadPageRankResult() throws IOException {
+        downloadJsonFile(PAGE_RANK_DATA_FILE);
+    }
+
+    @FXML
+    private void handleRunPageRank() {
+        TaskVoid task = new runPageRankTask();
+        setProgress(task);
+        new Thread(task).start();
+    }
 
     private void uploadJsonFile(String fileName) throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -511,8 +697,9 @@ public class ScraperPageController implements Initializable {
         if (file != null) {
             Path uploadFilePath = uploadFile.getParentFile().toPath();
             Path filePath = file.toPath();
-            TaskVoid task = TaskVoid.testTask();
+            TaskVoid task = TaskVoid.testTask("Upload complete!");
             setProgress(task);
+            new Thread(task).start();
             try {
                 Files.copy(filePath, uploadFilePath.resolve(uploadFile.getName()));
             }
@@ -535,8 +722,9 @@ public class ScraperPageController implements Initializable {
 //            System.err.println(downloadFile.toPath() + " " + folder.toPath());
             Path downloadFilePath = downloadFile.toPath();
             Path folderPath = folder.toPath();
-            TaskVoid task = TaskVoid.testTask();
+            TaskVoid task = TaskVoid.testTask("Download complete!");
             setProgress(task);
+            new Thread(task).start();
             try {
                 Files.copy(downloadFilePath, folderPath.resolve(downloadFilePath.getFileName()));
             }

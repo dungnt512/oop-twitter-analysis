@@ -9,8 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class GraphUserNode extends GraphNode {
     public GraphUserNode(double weight, String id) {
         super("user", id, weight);
@@ -26,5 +24,4 @@ public class GraphUserNode extends GraphNode {
         super("user", id, weight);
         this.user = user;
     }
-    private User user;
 }

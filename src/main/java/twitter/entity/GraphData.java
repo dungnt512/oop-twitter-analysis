@@ -1,4 +1,5 @@
 package twitter.entity;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GraphData {
-
-    private long sumBias;
+    private double sumBias;
     private List<GraphNode> nodes = new ArrayList<>();
 }

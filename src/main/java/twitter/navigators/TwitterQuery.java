@@ -13,7 +13,7 @@ import twitter.entity.LoginAccount;
 @Setter
 @AllArgsConstructor
 public class TwitterQuery implements SiteQuery {
-    private final String TWITTER_HOME_PAGE = "https://x.com/";
+    public static final String TWITTER_HOME_PAGE = "https://x.com/";
     private WebDriver driver;
 
     @Override

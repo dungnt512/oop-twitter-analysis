@@ -22,6 +22,7 @@ public class GraphNode {
 
     protected String type;
     protected String id;
+    private int followersCount = 0;
     protected double weight = 0;
     protected double rank = 0;
     public GraphNode(String type, String id, double weight) {
@@ -31,4 +32,5 @@ public class GraphNode {
     }
 
     protected List<GraphEdge> edges = new ArrayList<>();
+    protected User user;
 }
