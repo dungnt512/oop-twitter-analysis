@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GraphEdge {
-    String type;
-    double weight;
-    GraphNode nodeStart;
-    GraphNode nodeEnd;
+    private String type;
+    private double weight;
+    private GraphNode nodeStart;
+    private GraphNode nodeEnd;
 }

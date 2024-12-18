@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TweetObject {
-    String typeName;
+    protected String typeName;
 }

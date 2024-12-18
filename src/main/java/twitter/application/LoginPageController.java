@@ -24,7 +24,6 @@ import twitter.scraper.XScraper;
 import java.io.IOException;
 import java.util.Objects;
 
-@Getter
 @Setter
 public class LoginPageController {
     @FXML

@@ -10,8 +10,6 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-@Getter
-@Setter
 public class DriverManager {
     private ChromeOptions getChromeOptions(String proxyAddress, boolean headless) {
         ChromeOptions options = new ChromeOptions();

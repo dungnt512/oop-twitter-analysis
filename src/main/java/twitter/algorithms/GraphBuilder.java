@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class GraphBuilder {
     private final String DATA_ROOT_DIR = "data/";

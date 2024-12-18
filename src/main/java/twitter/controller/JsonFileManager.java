@@ -13,10 +13,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-@Getter
-@Setter
 public class JsonFileManager {
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static <T> T fromJson(String file, boolean isPrint, Type type) {
         T value = null;
