@@ -23,9 +23,10 @@ public class GraphData {
     private int postEdgeCount = 0;
     private int commentEdgeCount = 0;
     private int retweetEdgeCount = 0;
+
     public void printParameter() {
         System.out.println("---------------------------------------");
-        System.out.printf("sumBias: %,.20f", sumBias);
+        System.out.printf("sumBias: %,.2f\n", sumBias);
         System.out.println("KOLsCount: " + KOLsCount);
         System.out.println("nodesCount: " + nodesCount);
         System.out.println("edgesCount: " + edgesCount);

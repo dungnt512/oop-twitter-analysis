@@ -141,10 +141,10 @@ public class GraphBuilder {
         GraphData graphData = new GraphData();
         double sumBias = 0;
         Set<String> userIds = new HashSet<>();
-        progressPrinter = new ProgressPrinter("Build graph...", users.size() * 4L + tweets.size() * 2L + 2);
+
         int counter = 0;
         for (Map.Entry<String, User> entry : users.entrySet()) {
-            printProgress(++counter, false);
+//            printProgress(++counter, false);
             User user = entry.getValue();
 //           graphData.getNodes().add(new GraphUserNode(0, entry.getKey(), user));
             if (KOLsList.contains(entry.getKey())) {
@@ -157,7 +157,7 @@ public class GraphBuilder {
         }
 //        sumBias += tweets.size();
         for (Map.Entry<String, Tweet> entry : tweets.entrySet()) {
-            printProgress(++counter, false);
+//            printProgress(++counter, false);
 //            graphData.getNodes().add(new GraphTweetNode(0, entry.getKey(), entry.getValue()));
             Tweet tweet = entry.getValue();
             if (tweet.getComments() == null) tweet.setComments(new ArrayList<>());
@@ -172,7 +172,7 @@ public class GraphBuilder {
         Map<String, GraphNode> nodeMap = new HashMap<>();
 
         for (Map.Entry<String, User> entry : users.entrySet()) {
-            printProgress(++counter, false);
+//            printProgress(++counter, false);
             User user = entry.getValue();
             if (!KOLsList.contains(entry.getKey())) {
                 continue;
@@ -182,7 +182,7 @@ public class GraphBuilder {
             nodeMap.put(entry.getKey(), node);
         }
         for (Map.Entry<String, Tweet> entry : tweets.entrySet()) {
-            printProgress(++counter, false);
+//            printProgress(++counter, false);
             GraphNode node = new GraphTweetNode(0, entry.getKey(), entry.getValue());
             graphData.getNodes().add(node);
             nodeMap.put(entry.getKey(), node);
@@ -197,8 +197,8 @@ public class GraphBuilder {
         }
 
         for (Map.Entry<String, User> entry : users.entrySet()) {
-            counter += 2;
-            printProgress(counter, false);
+//            counter += 2;
+//            printProgress(counter, false);
             User user = entry.getValue();
             String userId = entry.getKey();
             if (!KOLsList.contains(userId)) {
@@ -218,18 +218,30 @@ public class GraphBuilder {
                 tweetNode.getEdges().add(new GraphEdge("post", 1.0, tweetNode, node));
                 for (String commentUserId : tweet.getComments()) {
                     GraphNode commentNode = nodeMap.get(commentUserId);
-                    commentNode.getEdges().add(new GraphEdge("comment", 0.0, commentNode, tweetNode));
+                    commentNode.getEdges().add(new GraphEdge("comment", 0.1, commentNode, tweetNode));
                     commentNode.getEdges().add(new GraphEdge("comment", 0.1, commentNode, node));
                 }
                 for (String retweetUserId : tweet.getRetweets()) {
                     GraphNode retweetNode = nodeMap.get(retweetUserId);
-                    retweetNode.getEdges().add(new GraphEdge("retweet", 0.0, retweetNode, tweetNode));
+                    retweetNode.getEdges().add(new GraphEdge("retweet", 0.1, retweetNode, tweetNode));
                     retweetNode.getEdges().add(new GraphEdge("retweet", 0.1, retweetNode, node));
                 }
             }
         }
+        long totalProcess = users.size() * 4L + tweets.size() * 2L;
+        counter = (int)totalProcess;
+        long added = 0;
+        for (GraphNode node : graphData.getNodes()) {
+            if (node.getEdges().isEmpty()) {
+                added += KOLsList.size();
+            }
+        }
 
-        int KOLsCount = 0;
+        progressPrinter = new ProgressPrinter("Build graph", totalProcess + added + 2);
+        printProgress(totalProcess, false);
+        totalProcess += added + 2;
+
+        int KOLsCount = KOLsList.size();
         int nodesCount = graphData.getNodes().size();
         int edgesCount = 0;
         int followEdgeCount = 0;
@@ -257,7 +269,7 @@ public class GraphBuilder {
                 }
             }
             if (node.getEdges().isEmpty()) {
-                KOLsCount++;
+                printProgress(counter += KOLsList.size(), false);
 //                System.err.print(node.getId() + " ");
                 for (String KOLId : KOLsList) {
                     node.getEdges().add(new GraphEdge("end", 1.0, node, nodeMap.get(KOLId)));

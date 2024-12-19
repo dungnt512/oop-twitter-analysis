@@ -44,6 +44,7 @@ public class App extends Application {
         Scene scene = new Scene(loader.load());
         LoginPageController controller = loader.getController();
         stage.setTitle("X Scraper");
+        stage.resizableProperty().setValue(Boolean.FALSE);
         try {
             stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("logo.png"))));
         }

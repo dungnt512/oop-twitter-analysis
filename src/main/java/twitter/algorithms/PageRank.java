@@ -45,8 +45,10 @@ public class PageRank {
 
         int counter = 0;
         double minDifference = Double.MAX_VALUE;
+        long startTime = System.nanoTime();
         if (progress != null) {
-            progress.set(-1.0);
+//            progress.set(-1.0);
+            message.set("PageRank: " + counter + " iterations. Running time: " + new TimePrinter(System.nanoTime() - startTime).getApproximateTime() + ".");
         }
         while (true) {
             double maxDifference = 0.0;
@@ -58,9 +60,9 @@ public class PageRank {
 //            }
 
             for (GraphNode node : graphData.getNodes()) {
-                if (!node.getType().equals("kol")) {
-                    continue;
-                }
+//                if (!node.getType().equals("kol")) {
+//                    continue;
+//                }
                 double sumWeight = 0;
                 for (GraphEdge edge : node.getEdges()) {
                     sumWeight += edge.getWeight();
@@ -94,7 +96,10 @@ public class PageRank {
 
             minDifference = Math.max(Math.min(minDifference, maxDifference), EPSILON);
             counter++;
-            message.set("Pagerank: " + counter + " iterations");
+            if (message != null) {
+                message.set("PageRank: " + counter + " iterations. Running time: " + new TimePrinter(System.nanoTime() - startTime).getApproximateTime() + ".");
+                System.out.println(message.getValue());
+            }
 
 //            if (minDifference < EPSILON * 70 && counter == 0) {
 //                progressPrinter = new ProgressPrinter("Running PageRank...", (long)(BASE * (minDifference - EPSILON)));
@@ -126,8 +131,9 @@ public class PageRank {
         JsonFileManager.toJson(PAGE_RANK_DATA_FILE, result, true);
 //        printProgress(progressPrinter.getTotal(), true);
         if (progress != null) {
+            message.set("PageRank algorithm completed! Running time: " + new TimePrinter(System.nanoTime() - startTime).getApproximateTime() + ".");
             progress.set(1.0);
-            message.set("Pagerank algorithm completed!");
+            System.out.println(message.getValue());
         }
     }
 

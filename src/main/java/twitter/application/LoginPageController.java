@@ -37,12 +37,13 @@ public class LoginPageController {
 
     public void initialize() throws IOException {
         loginAccount = JsonFileManager.fromJson(X_LOGIN_ACCOUNT_FILE, true, LoginAccount.class);
-        usernameField.setText(loginAccount.getUsername());
-        emailField.setText(loginAccount.getMail());
-        passwordField.setText(loginAccount.getPassword());
+        if (loginAccount != null) {
+            usernameField.setText(loginAccount.getUsername());
+            emailField.setText(loginAccount.getMail());
+            passwordField.setText(loginAccount.getPassword());
+        }
 //        scene.setFill(Color.TRANSPARENT);
 //        stage.initStyle(StageStyle.TRANSPARENT);
-
 
     }
 
@@ -84,11 +85,11 @@ public class LoginPageController {
                 return null;
             }
         };
-        task.setOnSucceeded(e -> switchToScraperPage());
+        task.setOnSucceeded(e -> switchToScraperPage(true));
         return task;
     }
 
-    private void switchToScraperPage() {
+    private void switchToScraperPage(boolean isLogin) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scraper-page.fxml"));
             Scene scene = new Scene(loader.load());
@@ -98,9 +99,15 @@ public class LoginPageController {
             controller.getProgressBar().progressProperty().bind(task.progressProperty());
             controller.setXScraper(scraper);
             controller.setStage(stage);
+            controller.setLogin(isLogin);
 //            controller.setProgressMessageProperty();
-            Label label = controller.getHelloLabel();
-            label.setText("Hello " + loginAccount.getName() + " (" + loginAccount.getUsername() + ")! Welcome to X Scraper!");
+            if (isLogin) {
+                Label label = controller.getHelloLabel();
+                label.setText("Hello " + loginAccount.getName() + " (" + loginAccount.getUsername() + ")! Welcome to X Scraper!");
+            }
+            else {
+                controller.disableAllScrapeButton();
+            }
 
             stage.setScene(scene);
             stage.centerOnScreen();
@@ -111,6 +118,16 @@ public class LoginPageController {
             //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleGuest() throws InterruptedException {
+//        TaskVoid task = new TaskVoid();
+//        task.setOnSucceeded(e -> switchToScraperPage(false));
+//        Thread thread = new Thread(task);
+//        Thread.sleep(3000);
+//        thread.start();
+        switchToScraperPage(false);
     }
 
     @FXML

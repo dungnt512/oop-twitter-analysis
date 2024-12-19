@@ -41,5 +41,10 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </MFXButton>
+      <MFXButton contentDisplay="CENTER" defaultButton="true" layoutX="237.0" layoutY="300.0" onMouseClicked="#handleGuest" prefHeight="31.0" prefWidth="161.0" rippleAnimateShadow="true" rippleColor="#0099ff" style="-fx-background-color: -mfx-red;" text="Login as Guest">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </MFXButton>
    </children>
 </AnchorPane>

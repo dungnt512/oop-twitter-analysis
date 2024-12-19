@@ -139,6 +139,7 @@ public class ScraperPageController implements Initializable {
     @FXML
     private MFXButton exitButton;
 
+    private boolean isLogin = true;
     private XScraper xScraper;
     private PageRank pageRank;
 
@@ -149,6 +150,7 @@ public class ScraperPageController implements Initializable {
         progressBar.getRanges3().add(NumberRange.of(0.61, 1.0));
 
         createUserTableList(userTable, false);
+        createPageRankResultTable(true);
 //        userTable.autosizeColumnsOnInitialization();
         pageRank = new PageRank();
     }
@@ -158,7 +160,9 @@ public class ScraperPageController implements Initializable {
     @FXML
     private void exit() {
         if (System.currentTimeMillis() - lastExitTime < exitMaxDuration) {
-            xScraper.quitDriver();
+            if (xScraper != null) {
+                xScraper.quitDriver();
+            }
             stage.close();
             Platform.exit();
         }
@@ -423,14 +427,22 @@ public class ScraperPageController implements Initializable {
         }
     }
 
-    private void enableAllButtons() {
+    public void enableAllScrapeButton() {
         scrapeUserListButton.setDisable(false);
         scrapeAllButton.setDisable(false);
+    }
+    public void enableAllButtons() {
+        if (isLogin) {
+            enableAllScrapeButton();
+        }
         runPageRankButton.setDisable(false);
     }
-    private void disableAllButtons() {
+    public void disableAllScrapeButton() {
         scrapeUserListButton.setDisable(true);
         scrapeAllButton.setDisable(true);
+    }
+    public void disableAllButtons() {
+        disableAllScrapeButton();
         runPageRankButton.setDisable(true);
     }
 
@@ -620,36 +632,9 @@ public class ScraperPageController implements Initializable {
         downloadJsonFile(USER_COMMENTS_SCRAPE_FILE);
     }
 
-    class runPageRankTask extends TaskVoid {
-        @Override
-        protected Void call() throws Exception {
-//            System.err.println(progressProperty + " " + messageProperty);
-//            System.err.println(xScraper.getProgress() + " " + xScraper.getMessage());
-            disableAllButtons();
-            setProgressMessagePageRank();
-            new Thread(()-> {
-                pageRank.runPageRank();
-            }).start();
-            do {
-                updateProgress(progressProperty.get(), 1.0);
-                updateMessage(messageProperty.get());
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(100);
-                }
-                catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            } while (progressProperty.get() < 1.0);
-            updateProgress(1.0, 1.0);
-            updateMessage("PageRank completed!");
-//            System.err.println(getProgress() + " " + getMessage());
-            return null;
-        }
-        @SuppressWarnings("unchecked")
-        protected void succeeded() {
-            super.succeeded();
-            enableAllButtons();
+    @SuppressWarnings("unchecked")
+    private void createPageRankResultTable(boolean isFirst) {
+        if (isFirst) {
             MFXTableColumn<GraphNode> usernameColumn = new MFXTableColumn<>("Username", true, Comparator.comparing(GraphNode::getId));
             MFXTableColumn<GraphNode> userLinkColumn = new MFXTableColumn<>("Link", true, Comparator.comparing(GraphNode::getId));
             MFXTableColumn<GraphNode> followersCountColumn = new MFXTableColumn<>("Followers", true, Comparator.comparing(GraphNode::getFollowersCount));
@@ -686,9 +671,46 @@ public class ScraperPageController implements Initializable {
                     new IntegerFilter<>("Followers", GraphNode::getFollowersCount),
                     new DoubleFilter<>("Weight", GraphNode::getWeight)
             );
-            GraphData pageRankData = JsonFileManager.fromJson(PAGE_RANK_DATA_FILE, true, GraphData.class);
+        }
+
+        GraphData pageRankData = JsonFileManager.fromJson(PAGE_RANK_DATA_FILE, true, GraphData.class);
+        if (pageRankData != null) {
             ObservableList<GraphNode> pageRankUserList = FXCollections.observableList(pageRankData.getNodes());
             pageRankResultTable.setItems(pageRankUserList);
+        }
+    }
+
+
+    class runPageRankTask extends TaskVoid {
+        @Override
+        protected Void call() throws Exception {
+//            System.err.println(progressProperty + " " + messageProperty);
+//            System.err.println(xScraper.getProgress() + " " + xScraper.getMessage());
+            disableAllButtons();
+            setProgressMessagePageRank();
+            new Thread(()-> {
+                pageRank.runPageRank();
+            }).start();
+            do {
+                updateProgress(progressProperty.get(), 1.0);
+                updateMessage(messageProperty.get());
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } while (progressProperty.get() < 1.0);
+            updateProgress(1.0, 1.0);
+//            updateMessage("PageRank completed!");
+//            System.err.println(getProgress() + " " + getMessage());
+            return null;
+        }
+        protected void succeeded() {
+            super.succeeded();
+            enableAllButtons();
+            createPageRankResultTable(false);
             System.out.println(progressProperty().getValue() + " " + messageProperty().getValue());
         }
         protected void failed() {
