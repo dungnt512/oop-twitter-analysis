@@ -8,9 +8,6 @@ import twitter.entity.LoginAccount;
 
 import java.util.Arrays;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class NitterQuery implements SiteQuery {
     private final String NITTER_HOME_PAGE = "https://nitter.poast.org/";
     private WebDriver driver;
@@ -89,5 +86,9 @@ public class NitterQuery implements SiteQuery {
 
     public LoginAccount getUserProfile() {
         return null;
+    }
+
+    public NitterQuery(WebDriver driver) {
+        this.driver = driver;
     }
 }

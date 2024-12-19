@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class GraphData {
     private double sumBias;
     private int KOLsCount;
@@ -50,4 +46,84 @@ public class GraphData {
         this.retweetEdgeCount = retweetEdgeCount;
     }
     private List<GraphNode> nodes = new ArrayList<>();
+
+    public double getSumBias() {
+        return sumBias;
+    }
+
+    public void setSumBias(double sumBias) {
+        this.sumBias = sumBias;
+    }
+
+    public int getKOLsCount() {
+        return KOLsCount;
+    }
+
+    public void setKOLsCount(int KOLsCount) {
+        this.KOLsCount = KOLsCount;
+    }
+
+    public int getNodesCount() {
+        return nodesCount;
+    }
+
+    public void setNodesCount(int nodesCount) {
+        this.nodesCount = nodesCount;
+    }
+
+    public int getEdgesCount() {
+        return edgesCount;
+    }
+
+    public void setEdgesCount(int edgesCount) {
+        this.edgesCount = edgesCount;
+    }
+
+    public int getFollowEdgeCount() {
+        return followEdgeCount;
+    }
+
+    public void setFollowEdgeCount(int followEdgeCount) {
+        this.followEdgeCount = followEdgeCount;
+    }
+
+    public int getFollowingEdgeCount() {
+        return followingEdgeCount;
+    }
+
+    public void setFollowingEdgeCount(int followingEdgeCount) {
+        this.followingEdgeCount = followingEdgeCount;
+    }
+
+    public int getPostEdgeCount() {
+        return postEdgeCount;
+    }
+
+    public void setPostEdgeCount(int postEdgeCount) {
+        this.postEdgeCount = postEdgeCount;
+    }
+
+    public int getCommentEdgeCount() {
+        return commentEdgeCount;
+    }
+
+    public void setCommentEdgeCount(int commentEdgeCount) {
+        this.commentEdgeCount = commentEdgeCount;
+    }
+
+    public int getRetweetEdgeCount() {
+        return retweetEdgeCount;
+    }
+
+    public void setRetweetEdgeCount(int retweetEdgeCount) {
+        this.retweetEdgeCount = retweetEdgeCount;
+    }
+
+    public List<GraphNode> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(List<GraphNode> nodes) {
+        this.nodes = nodes;
+    }
 }

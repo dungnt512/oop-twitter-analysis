@@ -13,10 +13,6 @@ import twitter.navigators.*;
 
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class TwitterScraper extends Scraper {
     private List<Map<String, String>> scrapedTweets = new ArrayList<>();
     private TwitterLogin siteLogin;
@@ -60,5 +56,9 @@ public class TwitterScraper extends Scraper {
             DriverManager.addCookies(driver, loginCookies);
             DriverManager.refresh(driver);
         }
+    }
+
+    public TwitterUserScraper getTwitterUserScraper() {
+        return twitterUserScraper;
     }
 }

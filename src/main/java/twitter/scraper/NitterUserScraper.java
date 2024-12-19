@@ -17,9 +17,6 @@ import twitter.navigators.SiteScroller;
 
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class NitterUserScraper extends Scraper {
     private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
@@ -204,5 +201,9 @@ public class NitterUserScraper extends Scraper {
             printProgress(counter, false);
         }
         printProgress(counter, true);
+    }
+
+    public void setMINIMUM_FOLLOWERS_COUNT(int MINIMUM_FOLLOWERS_COUNT) {
+        this.MINIMUM_FOLLOWERS_COUNT = MINIMUM_FOLLOWERS_COUNT;
     }
 }

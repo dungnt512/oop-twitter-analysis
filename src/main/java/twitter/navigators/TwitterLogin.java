@@ -8,8 +8,6 @@ import twitter.entity.LoginAccount;
 
 import java.util.NoSuchElementException;
 
-@Getter
-@Setter
 public class TwitterLogin implements SiteLogin {
     private final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
     private final String TWITTER_LOGIN_URL = "https://x.com/i/flow/login";

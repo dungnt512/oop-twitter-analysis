@@ -4,10 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class TimePrinter {
     private long nanoSeconds;
     private long days;
@@ -67,5 +63,13 @@ public class TimePrinter {
     public static String getConvertedApproximateTime(long nanoSecond) {
         TimePrinter time = new TimePrinter(nanoSecond);
         return time.getApproximateTime();
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
     }
 }

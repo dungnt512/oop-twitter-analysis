@@ -8,10 +8,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class SiteScroller {
     private int currentPosition = 0;
     private int lastPosition = 0;
@@ -52,4 +48,5 @@ public class SiteScroller {
         String temp = js.executeScript("return window.scrollY;").toString();
         currentPosition = Integer.parseInt(temp);
     }
+
 }

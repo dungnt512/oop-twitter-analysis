@@ -17,7 +17,6 @@ import twitter.scraper.XScraper;
 
 import java.io.IOException;
 
-@Setter
 public class LoginPageController {
     @FXML
     private MFXTextField usernameField;
@@ -143,4 +142,11 @@ public class LoginPageController {
         login(false);
     }
 
+    public void setScraper(XScraper scraper) {
+        this.scraper = scraper;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }

@@ -7,10 +7,6 @@ import lombok.Setter;
 import org.openqa.selenium.WebDriver;
 import twitter.navigators.NitterQuery;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class NitterScraper extends Scraper {
     private NitterTweetScraper nitterTweetScraper;
     private NitterUserScraper nitterUserScraper;
@@ -36,5 +32,13 @@ public class NitterScraper extends Scraper {
 //            Thread.sleep(3000);
 //        }
 //        catch (InterruptedException _) {}
+    }
+
+    public NitterTweetScraper getNitterTweetScraper() {
+        return nitterTweetScraper;
+    }
+
+    public NitterUserScraper getNitterUserScraper() {
+        return nitterUserScraper;
     }
 }

@@ -9,9 +9,6 @@ import org.openqa.selenium.WebElement;
 import java.util.*;
 import twitter.entity.LoginAccount;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class TwitterQuery implements SiteQuery {
     public static final String TWITTER_HOME_PAGE = "https://x.com/";
     private WebDriver driver;
@@ -83,5 +80,9 @@ public class TwitterQuery implements SiteQuery {
         account.setName(profile.getFirst().getText());
         account.setUsername(profile.get(1).getText());
         return account;
+    }
+
+    public TwitterQuery(WebDriver driver) {
+        this.driver = driver;
     }
 }

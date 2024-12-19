@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-@Setter
 public class PageRank {
     private final double DAMPING_FACTOR = 0.85;
     private final double EPSILON = 1e-6;
@@ -144,5 +142,13 @@ public class PageRank {
 //        }
         PageRank pageRank = new PageRank();
         pageRank.runPageRank();
+    }
+
+    public void setProgress(DoubleProperty progress) {
+        this.progress = progress;
+    }
+
+    public void setMessage(StringProperty message) {
+        this.message = message;
     }
 }

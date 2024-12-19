@@ -12,10 +12,6 @@ import twitter.entity.ProgressPrinter;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Scraper {
     protected final String DATA_ROOT_DIR = "data/";
     protected final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
@@ -53,5 +49,25 @@ public class Scraper {
 
     public void quitDriver() {
         driver.quit();
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public SiteQuery getSiteQuery() {
+        return siteQuery;
+    }
+
+    public void setProgress(DoubleProperty progress) {
+        this.progress = progress;
+    }
+
+    public void setMessage(StringProperty message) {
+        this.message = message;
     }
 }

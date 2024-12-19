@@ -16,9 +16,6 @@ import twitter.navigators.SiteScroller;
 
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class NitterTweetScraper extends Scraper {
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
     private final String USER_TWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userTweets.json";

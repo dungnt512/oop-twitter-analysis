@@ -47,8 +47,6 @@ import java.nio.file.Files;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
-@Getter
-@Setter
 public class ScraperPageController implements Initializable {
     private final String DATA_ROOT_DIR = "data/";
     private final String X_LOGIN_DATA_ROOT_DIR = "data/x_account/";
@@ -819,4 +817,23 @@ public class ScraperPageController implements Initializable {
     }
 
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public MFXProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public Label getHelloLabel() {
+        return helloLabel;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
+
+    public void setXScraper(XScraper xScraper) {
+        this.xScraper = xScraper;
+    }
 }

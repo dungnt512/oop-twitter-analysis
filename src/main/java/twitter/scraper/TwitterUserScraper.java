@@ -19,9 +19,6 @@ import twitter.navigators.TwitterQuery;
 
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class TwitterUserScraper extends Scraper {
     private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
     private final String USER_IDS_SCRAPE_BACKUP_FILE = DATA_ROOT_DIR + "userIds_tmp.json";
@@ -414,4 +411,6 @@ public class TwitterUserScraper extends Scraper {
         }
         printProgress(limit, true);
     }
+
+
 }

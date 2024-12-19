@@ -3,9 +3,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class ProgressPrinter {
     private final int MAX_PERCENT = 100;
     private final String name;
@@ -75,5 +72,29 @@ public class ProgressPrinter {
     }
     public boolean increment(long delta) {
         return update(current + delta);
+    }
+
+    public int getMAX_PERCENT() {
+        return MAX_PERCENT;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getCurrent() {
+        return current;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public int getLastPercent() {
+        return lastPercent;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
     }
 }

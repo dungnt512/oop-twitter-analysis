@@ -13,10 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Tweet extends TweetObject {
     public static class SortTweets implements Comparator<Tweet> {
         public int compare(Tweet a, Tweet b) {
@@ -49,5 +45,69 @@ public class Tweet extends TweetObject {
         this.tweetLink = tweetLink;
         String[] split = tweetLink.split("/");
         this.tweetId = split[split.length - 1];
+    }
+
+    public String getTweetId() {
+        return tweetId;
+    }
+
+    public void setTweetId(String tweetId) {
+        this.tweetId = tweetId;
+    }
+
+    public String getTweetLink() {
+        return tweetLink;
+    }
+
+    public void setTweetLink(String tweetLink) {
+        this.tweetLink = tweetLink;
+    }
+
+    public int getNumberOfComments() {
+        return numberOfComments;
+    }
+
+    public void setNumberOfComments(int numberOfComments) {
+        this.numberOfComments = numberOfComments;
+    }
+
+    public int getNumberOfRetweets() {
+        return numberOfRetweets;
+    }
+
+    public void setNumberOfRetweets(int numberOfRetweets) {
+        this.numberOfRetweets = numberOfRetweets;
+    }
+
+    public int getNumberOfQuotes() {
+        return numberOfQuotes;
+    }
+
+    public void setNumberOfQuotes(int numberOfQuotes) {
+        this.numberOfQuotes = numberOfQuotes;
+    }
+
+    public int getNumberOfHearts() {
+        return numberOfHearts;
+    }
+
+    public void setNumberOfHearts(int numberOfHearts) {
+        this.numberOfHearts = numberOfHearts;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
+    }
+
+    public List<String> getRetweets() {
+        return retweets;
+    }
+
+    public void setRetweets(List<String> retweets) {
+        this.retweets = retweets;
     }
 }

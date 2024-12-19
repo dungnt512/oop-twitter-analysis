@@ -288,4 +288,12 @@ public class GraphBuilder {
     }
 
 
+    public void setProgress(DoubleProperty progress) {
+        this.progress = progress;
+    }
+
+
+    public void setMessage(StringProperty message) {
+        this.message = message;
+    }
 }

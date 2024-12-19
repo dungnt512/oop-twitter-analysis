@@ -5,10 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openqa.selenium.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class XScraper extends Scraper {
     TwitterScraper twitterScraper;
     NitterScraper nitterScraper;
@@ -22,5 +18,13 @@ public class XScraper extends Scraper {
         super(driver);
         twitterScraper = new TwitterScraper(driver, loginWithCookies);
         nitterScraper = new NitterScraper(driver);
+    }
+
+    public TwitterScraper getTwitterScraper() {
+        return twitterScraper;
+    }
+
+    public NitterScraper getNitterScraper() {
+        return nitterScraper;
     }
 }

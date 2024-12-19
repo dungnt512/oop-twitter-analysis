@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
 public class GraphUserNode extends GraphNode {
     public GraphUserNode(double weight, String id) {
         super("user", id, weight);
