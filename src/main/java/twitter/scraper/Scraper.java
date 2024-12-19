@@ -2,7 +2,6 @@ package twitter.scraper;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.concurrent.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import twitter.controller.DriverManager;
 import twitter.entity.ProgressPrinter;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
-import twitter.entity.TaskVoid;
 
 @Getter
 @Setter

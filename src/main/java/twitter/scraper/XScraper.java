@@ -1,15 +1,9 @@
 package twitter.scraper;
-import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openqa.selenium.*;
-import twitter.controller.JsonFileManager;
-import twitter.entity.LoginAccount;
-import twitter.navigators.*;
-
-import java.util.*;
 
 @Getter
 @Setter

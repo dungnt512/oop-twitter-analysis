@@ -22,9 +22,10 @@ public class NitterQuery implements SiteQuery {
 
     @Override
     public void goToSearch(String query, String tab, boolean isHashTag) {}
+
     @Override
     public void goToLink(String link) {
-        driver.get(NITTER_HOME_PAGE + link);
+        driver.get(link);
     }
 
     @Override
@@ -79,6 +80,11 @@ public class NitterQuery implements SiteQuery {
         url.append("%29&since=&until=&near=");
         System.out.println("Get users of '" + query + "' in search results of '" + Arrays.toString(searches) + "'...");
         driver.get(url.toString());
+    }
+
+    @Override
+    public void goToTweet(String userId, String tweetId, String tab) {
+
     }
 
     public LoginAccount getUserProfile() {

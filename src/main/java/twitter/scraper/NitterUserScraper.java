@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import twitter.entity.ProgressPrinter;
 
+import twitter.entity.Tweet;
 import twitter.entity.User;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.JavascriptExecutor;
@@ -22,6 +23,7 @@ import java.util.*;
 public class NitterUserScraper extends Scraper {
     private final String USER_IDS_SCRAPE_FILE = DATA_ROOT_DIR + "userIds.json";
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
+    private final String USER_COMMENTS_SCRAPE_FILE = DATA_ROOT_DIR + "userComments.json";
     private final String USER_EXCLUDE_FILE = DATA_ROOT_DIR + "userExclude.json";
     private int MINIMUM_FOLLOWERS_COUNT = 150;
 
@@ -140,5 +142,67 @@ public class NitterUserScraper extends Scraper {
         JsonFileManager.toJson(USER_EXCLUDE_FILE, excludeUser, true);
         JsonFileManager.toJson(USER_IDS_SCRAPE_FILE, userIds, true);
         JsonFileManager.toJson(USERS_SCRAPE_FILE, users, true);
+    }
+
+    private Set<String> getUsers() {
+        Set<String> commenters = new HashSet<>();
+
+        try {
+            for (int i = 0; i < 5; i++) {
+                List<WebElement> titles = driver.findElements(By.xpath("//a[@class='username']"));
+                for (WebElement title : titles) {
+                    String username = title.getText().trim();
+                    if (!username.isEmpty()) {
+                        commenters.add(username);
+                    }
+                }
+                int retryCount = 2;
+                while (retryCount > 0) {
+                    try {
+                        WebElement loadMoreBtn = driver.findElement(By.xpath("//div[@class='show-more']//a"));
+                        loadMoreBtn.click();
+                        Thread.sleep(1500);
+                        break;
+                    } catch (Exception e) {
+                        driver.navigate().refresh();
+                        Thread.sleep(2000);
+                        retryCount--;
+                    }
+                }
+                if (retryCount == 0) {
+                    System.err.println("No more comments!");
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
+            e.printStackTrace(); // Log lỗi nếu cần
+        }
+
+        return commenters;
+    }
+
+    public void getUserComments(int limit) throws Exception {
+        Map<String, User> users = JsonFileManager.fromJson(USER_COMMENTS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        if (users == null) users = new HashMap<>();
+        if (limit == 0) {
+            limit = users.size();
+        }
+
+        progressPrinter = new ProgressPrinter("Get user comments", limit);
+        int counter = 0;
+        for (User user : users.values()) {
+            if (user.getTweets() == null) user.setTweets(new ArrayList<>());
+            for (Tweet tweet : user.getTweets()) {
+                siteQuery.goToLink(tweet.getTweetLink());
+                Thread.sleep(3000);
+                Set<String> userIds = getUsers();
+                tweet.setComments(userIds.stream().toList());
+            }
+            JsonFileManager.toJson(USER_COMMENTS_SCRAPE_FILE, users, true);
+            counter++;
+            printProgress(counter, false);
+        }
+        printProgress(counter, true);
     }
 }

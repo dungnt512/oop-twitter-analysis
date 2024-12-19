@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -39,7 +36,7 @@ public class JsonFileManager {
             if (isPrint) {
                 System.out.println("Finding '" + file + "'...");
             }
-            Type mapType = new TypeToken<Map<String, Object>>(){}.getType();
+            Type mapType = new TypeToken<Map<String, T>>(){}.getType();
             JsonReader reader = new JsonReader(new FileReader(file));
             value = gson.fromJson(reader, mapType);
         }

@@ -1,17 +1,8 @@
 package twitter;
-import com.google.gson.stream.JsonReader;
-import javafx.application.Application;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.openqa.selenium.WebDriver;
 import twitter.application.App;
-import twitter.controller.JsonFileManager;
-import twitter.entity.LoginAccount;
-import twitter.scraper.TwitterScraper;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 @Getter
 @Setter

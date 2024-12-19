@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openqa.selenium.*;
 import twitter.controller.JsonFileManager;
+import twitter.controller.DriverManager;
 import twitter.entity.LoginAccount;
-import twitter.entity.ProgressPrinter;
 import twitter.navigators.*;
 
 import java.util.*;
@@ -48,19 +48,17 @@ public class TwitterScraper extends Scraper {
     }
     public void login(boolean loginWithCookies) {
         if (!loginWithCookies) {
-            Set<Cookie> beforeLoginCookies = driver.manage().getCookies();
+            Set<Cookie> beforeLoginCookies = DriverManager.getCookies(driver);
             siteLogin.login();
-            Set<Cookie> afterLoginCookies = driver.manage().getCookies();
+            Set<Cookie> afterLoginCookies = DriverManager.getCookies(driver);
             afterLoginCookies.removeAll(beforeLoginCookies);
             JsonFileManager.toJson(SITE_LOGIN_COOKIES_FILE, afterLoginCookies, false);
         }
         else {
             siteQuery.goToHome();
             Set<Cookie> loginCookies = JsonFileManager.fromJson(SITE_LOGIN_COOKIES_FILE, false, new TypeToken<Set<Cookie>>(){}.getType());
-            for (Cookie loginCookie : loginCookies) {
-                driver.manage().addCookie(loginCookie);
-            }
-            driver.navigate().refresh();
+            DriverManager.addCookies(driver, loginCookies);
+            DriverManager.refresh(driver);
         }
     }
 }

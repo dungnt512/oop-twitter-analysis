@@ -66,6 +66,15 @@ public class TwitterQuery implements SiteQuery {
     public void goToUserSearch(String query, String search) {}
     @Override
     public void goToUserSearches(String query, String[] searches) {}
+    @Override
+    public void goToTweet(String userId, String tweetId, String tab) {
+        if (tweetId == null || tweetId.isEmpty()) {
+            System.err.println("Query is not set!");
+            return ;
+        }
+        String url = TWITTER_HOME_PAGE + userId + "/status/" + tweetId + "/" + tab;
+        driver.get(url);
+    }
 
     public LoginAccount getUserProfile() {
         WebElement accountSwitcher = driver.findElement(By.xpath("//button[@data-testid='SideNav_AccountSwitcher_Button']"));

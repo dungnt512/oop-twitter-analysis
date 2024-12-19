@@ -3,12 +3,17 @@ package twitter.entity;
 import javafx.concurrent.Task;
 
 public class TaskVoid extends Task<Void> {
+    @Override
     public void updateProgress(double v1, double v2) {
         super.updateProgress(v1, v2);
     }
+
+    @Override
     public void updateProgress(long v1, long v2) {
         super.updateProgress(v1, v2);
     }
+
+    @Override
     public void updateMessage(String message) {
         super.updateMessage(message);
     }

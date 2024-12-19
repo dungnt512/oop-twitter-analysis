@@ -223,29 +223,53 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
 
-            </plugin>
-
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>twitter.Main</mainClass>
-
-                </configuration>
                 <executions>
                     <execution>
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>twitter.Main</mainClass>
-                            <options>
-                                <option>--add-opens</option>
-                                <option>org.seleniumhq.selenium.api/org.openqa.selenium=com.google.gson</option>
-                            </options>
+
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                    <version>1.18.34</version>
+                                </path>
+                            </annotationProcessorPaths>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running with: mvn clean javafx:run -->
+                        <id>default-cli</id>
+                        <configuration>
+                            <mainClass>twitter.Main</mainClass>
+
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                    <version>1.18.34</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>twitter.Main</mainClass>
+                    <options>
+                        <option>--add-opens</option>
+                        <option>org.seleniumhq.selenium.api/org.openqa.selenium=com.google.gson</option>
+                    </options>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -32,7 +32,7 @@ public class Tweet extends TweetObject {
     public static String getTweetId(String tweetLink) {
         String[] split = tweetLink.split("/");
         int j = split.length - 1;
-        while (split[j].charAt(0) < '0' && split[j].charAt(0) > '9') {
+        while (split[j].charAt(0) < '0' || split[j].charAt(0) > '9') {
             j--;
         }
         return removeSharpEnd(split[j]);

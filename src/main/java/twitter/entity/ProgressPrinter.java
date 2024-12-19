@@ -56,7 +56,7 @@ public class ProgressPrinter {
             current = nextValue;
             String message = "Processing '" + name + "'... (" + currentPercent + "%/100%)[" + current + "/" + total + "]";
             if (remaining < Long.MAX_VALUE) {
-                message += " --- about " + TimePrinter.getConvertedApproximateTime(remaining) + " left";
+                message += " \t\t\t\t\t\t\t about " + TimePrinter.getConvertedApproximateTime(remaining) + " left";
             }
             lastPercent = currentPercent;
             lastMessage = message;

@@ -2,18 +2,14 @@ package twitter.algorithms;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import twitter.controller.JsonFileManager;
 import twitter.entity.*;
 import twitter.navigators.TwitterQuery;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -30,19 +26,13 @@ public class PageRank {
     private DoubleProperty progress;
     private StringProperty message;
 
-    public void printProgress(long progress, boolean forced) {
-        progressPrinter.printProgress(progress, forced);
-        this.progress.set((double)progressPrinter.getCurrent() / progressPrinter.getTotal());
-        this.message.set(progressPrinter.getLastMessage());
-    }
 
     public void runPageRank() {
-        progressPrinter = new ProgressPrinter("Building graph...", 100);
-        printProgress(15, false);
         GraphBuilder graphBuilder = new GraphBuilder();
-        printProgress(30, false);
+        graphBuilder.setMessage(message);
+        graphBuilder.setProgress(progress);
         GraphData graphData = graphBuilder.buildGraph();
-//        double sumBias = graphData.getSumBias();
+        double sumBias = graphData.getSumBias();
 //        System.err.println(sumBias);
 
         Map<GraphNode, Double> followerCountMap = new HashMap<>();
@@ -52,11 +42,12 @@ public class PageRank {
                 followerCountMap.put(node, followersCount);
             }
         }
-        printProgress(90, false);
 
         int counter = 0;
         double minDifference = Double.MAX_VALUE;
-        double initDifference = Double.MAX_VALUE;
+        if (progress != null) {
+            progress.set(-1.0);
+        }
         while (true) {
             double maxDifference = 0.0;
 //            for (GraphNode node : graphData.getNodes()) {
@@ -102,15 +93,18 @@ public class PageRank {
             }
 
             minDifference = Math.max(Math.min(minDifference, maxDifference), EPSILON);
-            if (minDifference < EPSILON * 70 && counter == 0) {
-                progressPrinter = new ProgressPrinter("Running PageRank...", (long)(BASE * (minDifference - EPSILON)));
-//                progressPrinter = new ProgressPrinter("Running PageRank...", 200);
-                initDifference = minDifference;
-                counter++;
-            }
-            if (counter > 0) {
-                printProgress(Math.min((long) (BASE * (initDifference - minDifference)), progressPrinter.getTotal() - 1), false);
-            }
+            counter++;
+            message.set("Pagerank: " + counter + " iterations");
+
+//            if (minDifference < EPSILON * 70 && counter == 0) {
+//                progressPrinter = new ProgressPrinter("Running PageRank...", (long)(BASE * (minDifference - EPSILON)));
+////                progressPrinter = new ProgressPrinter("Running PageRank...", 200);
+//                initDifference = minDifference;
+//                counter++;
+//            }
+//            if (counter > 0) {
+//                printProgress(Math.min((long) (BASE * (initDifference - minDifference)), progressPrinter.getTotal() - 1), false);
+//            }
 //            printProgress(Math.min(counter, progressPrinter.getTotal() - 1), false);
 //            System.err.print(maxDifference + " ");
             if (maxDifference < EPSILON) {
@@ -121,6 +115,7 @@ public class PageRank {
         GraphData result = new GraphData();
         for (GraphNode node : graphData.getNodes()) {
             if (node.getType().equals("kol")) {
+                node.setWeight(node.getWeight() / sumBias);
                 GraphNode graphNode = new GraphNode(node.getType(), node.getId(), node.getWeight());
                 graphNode.setType(TwitterQuery.TWITTER_HOME_PAGE + node.getId());
                 graphNode.setFollowersCount(followerCountMap.get(node).intValue());
@@ -129,15 +124,19 @@ public class PageRank {
         }
         result.getNodes().sort(new GraphNode.SortNode());
         JsonFileManager.toJson(PAGE_RANK_DATA_FILE, result, true);
-        printProgress(progressPrinter.getTotal(), true);
+//        printProgress(progressPrinter.getTotal(), true);
+        if (progress != null) {
+            progress.set(1.0);
+            message.set("Pagerank algorithm completed!");
+        }
     }
 
     public static void main(String[] args) throws IOException {
-        GraphData graphData = JsonFileManager.fromJson("data/page-rank.json", true, GraphData.class);
-        if (graphData == null) {
-            System.err.println("...");
-        }
-//        PageRank pageRank = new PageRank();
-//        pageRank.runPageRank();
+//        GraphData graphData = JsonFileManager.fromJson("data/page-rank.json", true, GraphData.class);
+//        if (graphData == null) {
+//            System.err.println("...");
+//        }
+        PageRank pageRank = new PageRank();
+        pageRank.runPageRank();
     }
 }

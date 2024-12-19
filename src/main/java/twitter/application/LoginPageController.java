@@ -1,20 +1,14 @@
 package twitter.application;
 
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.json.Json;
-import twitter.*;
 import javafx.scene.control.*;
 import twitter.controller.JsonFileManager;
 import twitter.entity.LoginAccount;
@@ -22,7 +16,6 @@ import twitter.entity.TaskVoid;
 import twitter.scraper.XScraper;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Setter
 public class LoginPageController {

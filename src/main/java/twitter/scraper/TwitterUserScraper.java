@@ -8,8 +8,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.json.Json;
 import twitter.controller.JsonFileManager;
 import twitter.entity.ProgressPrinter;
+import twitter.entity.Tweet;
 import twitter.entity.User;
 import twitter.navigators.SiteQuery;
 import twitter.navigators.SiteScroller;
@@ -26,6 +28,7 @@ public class TwitterUserScraper extends Scraper {
     private final String USERS_SCRAPE_FILE = DATA_ROOT_DIR + "users.json";
     private final String USER_FOLLOWERS_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowers.json";
     private final String USER_FOLLOWING_SCRAPE_FILE = DATA_ROOT_DIR + "userFollowing.json";
+    private final String USER_RETWEETS_SCRAPE_FILE = DATA_ROOT_DIR + "userRetweets.json";
     private boolean isGetUserSearches = false;
 
     TwitterUserScraper(WebDriver driver, SiteScroller siteScroller, SiteQuery siteQuery) {
@@ -386,5 +389,29 @@ public class TwitterUserScraper extends Scraper {
         isGetUserSearches = true;
 //        progressPrinter.printProgress(maxUsers, true);
         printProgress(maxUsers, true);
+    }
+
+    public void getUsersRetweets(int limit) throws InterruptedException {
+        Map<String, User> users = JsonFileManager.fromJson(USER_RETWEETS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>() {}.getType());
+        if (users == null) users = new HashMap<>();
+        if (limit == 0) {
+            limit = users.size();
+        }
+        progressPrinter = new ProgressPrinter("Get retweets", limit);
+        int counter = 0;
+        for (User user : users.values()) {
+            if (user.getTweets() == null) user.setTweets(new ArrayList<>());
+            for (Tweet tweet : user.getTweets()) {
+                siteQuery.goToTweet(user.getUsername(), tweet.getTweetId(), "retweets");
+                Thread.sleep(3000);
+                Set<String> userIds = getUsers(200, 600, -1, null);
+//                tweet.getRetweets().addAll(userIds);
+                tweet.setRetweets(userIds.stream().toList());
+            }
+            JsonFileManager.toJson(USER_RETWEETS_SCRAPE_FILE, users, true);
+            counter++;
+            printProgress(counter, false);
+        }
+        printProgress(limit, true);
     }
 }

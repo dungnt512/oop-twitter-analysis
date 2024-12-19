@@ -12,11 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.control.Hyperlink;
 import javafx.stage.DirectoryChooser;
-import org.openqa.selenium.json.Json;
-import org.testng.internal.Graph;
 import twitter.algorithms.PageRank;
 import twitter.controller.JsonFileManager;
 import io.github.palexdev.materialfx.beans.NumberRange;
@@ -35,20 +32,15 @@ import javafx.scene.control.Label;
 import javafx.geometry.*;
 import lombok.Getter;
 import lombok.Setter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
 import java.awt.*;
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
@@ -334,7 +326,13 @@ public class ScraperPageController implements Initializable {
 //        setProgressMessageProperty();
         xScraper.getNitterScraper().getNitterUserScraper().getInfoOfUsers(0);
     }
-
+    private void runRetweetsScraper(TaskVoid task) throws Exception {
+//        setProgressMessageProperty();
+        xScraper.getTwitterScraper().getTwitterUserScraper().getUsersRetweets(0);
+    }
+    private void runCommentsScraper(TaskVoid task) throws Exception {
+        xScraper.getNitterScraper().getNitterUserScraper().getUserComments(0);
+    }
     class userListScraperTask extends TaskVoid {
         @Override
         protected Void call() throws Exception {
@@ -410,6 +408,20 @@ public class ScraperPageController implements Initializable {
             return null;
         }
     }
+    class retweetsScraper extends TaskVoid {
+        @Override
+        protected Void call() throws Exception {
+            runRetweetsScraper(this);
+            return null;
+        }
+    }
+    class commentsScraper extends TaskVoid {
+        @Override
+        protected Void call() throws Exception {
+            runCommentsScraper(this);
+            return null;
+        }
+    }
 
     private void enableAllButtons() {
         scrapeUserListButton.setDisable(false);
@@ -446,6 +458,12 @@ public class ScraperPageController implements Initializable {
             if (tweetsCheckbox.isSelected()) {
                 allDataScraperCounter++;
             }
+            if (reTweetsCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
+            if (commentsCheckbox.isSelected()) {
+                allDataScraperCounter++;
+            }
             new Thread(()-> {
                 try {
                     if (userProfileCheckbox.isSelected()) {
@@ -459,6 +477,12 @@ public class ScraperPageController implements Initializable {
                     }
                     if (tweetsCheckbox.isSelected()) {
                         runTweetScraper(this);
+                    }
+                    if (reTweetsCheckbox.isSelected()) {
+                        runRetweetsScraper(this);
+                    }
+                    if (commentsCheckbox.isSelected()) {
+                        runCommentsScraper(this);
                     }
 
                 } catch (Exception e) {
