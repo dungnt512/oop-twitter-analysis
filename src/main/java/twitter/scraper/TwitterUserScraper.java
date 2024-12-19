@@ -372,7 +372,6 @@ public class TwitterUserScraper extends Scraper {
     public void getUserSearches(int maxUsers, String... queries) throws InterruptedException {
         int m = queries.length;
         progressPrinter = new ProgressPrinter("Get users", maxUsers);
-        isGetUserSearches = true;
         JsonFileManager.toJson(USER_IDS_SCRAPE_FILE, new HashSet<>(), true);
         for (String query : queries) {
             Set<String> temp = JsonFileManager.fromJson(USER_IDS_SCRAPE_FILE, false, Set.class);
@@ -384,9 +383,10 @@ public class TwitterUserScraper extends Scraper {
             if (temp.size() >= maxUsers) {
                 break;
             }
+            isGetUserSearches = true;
             getUserSearch(query, maxUsers);
+            isGetUserSearches = false;
         }
-        isGetUserSearches = true;
 //        progressPrinter.printProgress(maxUsers, true);
         printProgress(maxUsers, true);
     }

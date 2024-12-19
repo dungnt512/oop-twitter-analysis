@@ -1,12 +1,7 @@
 [
   "ice_blockchain",
-  "AskBlockchain",
   "RiotPlatforms",
-  "ton_blockchain",
   "blockchain",
   "solana",
-  "WuBlockchain",
-  "blockchaincap",
-  "RenecBlockchain",
   "Cardano"
 ]

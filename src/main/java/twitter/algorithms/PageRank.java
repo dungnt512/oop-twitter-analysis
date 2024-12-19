@@ -47,7 +47,7 @@ public class PageRank {
         double minDifference = Double.MAX_VALUE;
         long startTime = System.nanoTime();
         if (progress != null) {
-//            progress.set(-1.0);
+            progress.set(-1.0);
             message.set("PageRank: " + counter + " iterations. Running time: " + new TimePrinter(System.nanoTime() - startTime).getApproximateTime() + ".");
         }
         while (true) {
