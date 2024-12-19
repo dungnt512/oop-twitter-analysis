@@ -13,6 +13,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TableCell;
 import javafx.stage.DirectoryChooser;
 import twitter.algorithms.PageRank;
 import twitter.controller.JsonFileManager;
@@ -44,6 +45,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 @Getter
 @Setter
@@ -183,17 +185,9 @@ public class ScraperPageController implements Initializable {
 
             usernameColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUsername) {
             });
-            userLinkColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getUserLink) {{
-                Hyperlink link = new Hyperlink(user.getUserLink());
-                link.setOnAction(event -> {
-                    try {
-                        Desktop.getDesktop().browse(new URI(user.getUserLink()));
-                    } catch (IOException | URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                setGraphic(link);
-            }});
+            userLinkColumn.setRowCellFactory(user -> new TableCellWithHyperlink(User::getUserLink) {
+
+            });
             followersCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(User::getFollowersCount) {{
                 setAlignment(Pos.CENTER);
             }});
@@ -211,7 +205,7 @@ public class ScraperPageController implements Initializable {
             );
         }
 
-        Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, false, new TypeToken<Map<String, User>>(){}.getType());
+        Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, true, new TypeToken<Map<String, User>>(){}.getType());
         for (Map.Entry<String, User> entry : users.entrySet()) {
             User user = entry.getValue();
             if (user.getUserLink() == null || user.getUserLink().isEmpty()) {
@@ -223,14 +217,33 @@ public class ScraperPageController implements Initializable {
         userTable.setItems(userList);
     }
 
-    @FXML
-    private void handleRefreshUserList() {
-        TaskVoid task = new TaskVoid() {
-            @Override
-            protected Void call() throws Exception {
-                updateMessage("Loading KOLs List...");
-                createUserTableList(userTable, true);
-                updateProgress(1, 2);
+    public static class TableCellWithHyperlink extends MFXTableRowCell<User, String> {
+        public TableCellWithHyperlink(Function<User, String> extractor) {
+            super(extractor);
+        }
+
+        @Override
+        public void update(User user) {
+            Hyperlink link = new Hyperlink(user.getUserLink());
+            link.setOnAction(event -> {
+//                Platform.runLater(() -> {
+                    try {
+                        Desktop.getDesktop().browse(new URI(user.getUserLink()));
+                    } catch (IOException | URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+//                });
+            });
+            setGraphic(link);
+        }
+    }
+
+    class refreshUserListTask extends TaskVoid {
+        @Override
+        protected Void call() throws Exception {
+            updateMessage("Loading KOLs List...");
+            updateProgress(1, 2);
+            Thread.sleep(1000);
 //                Map<String, User> users = JsonFileManager.fromJson(USERS_SCRAPE_FILE, false, new TypeToken<Map<String, User>>(){}.getType());
 
 //                for (Map.Entry<String, User> entry : users.entrySet()) {
@@ -244,17 +257,22 @@ public class ScraperPageController implements Initializable {
 //                ObservableList<User> userList = FXCollections.observableList(users.values().stream().toList());
 //                userTable.setItems(userList);
 //                updateProgress(3, 3);
-                return null;
-            }
+            return null;
+        }
 
-            @Override
-            protected void succeeded() {
-                updateProgress(1, 1);
-                updateMessage("Refresh KOLs List completed!");
-            }
-        };
+        @Override
+        protected void succeeded() {
+            updateProgress(1, 1);
+            updateMessage("Refresh KOLs List completed!");
+        }
+    }
+
+    @FXML
+    private void handleRefreshUserList() {
+        refreshUserListTask task = new refreshUserListTask();
         setProgress(task);
         new Thread(task).start();
+        createUserTableList(userTable, true);
 //        createUserTableList(userTable, true);
     }
 
@@ -643,16 +661,16 @@ public class ScraperPageController implements Initializable {
 
             usernameColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getId) {
             });
-            userLinkColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getType) {{
-                Hyperlink link = new Hyperlink(user.getType());
-                link.setOnAction(event -> {
-                    try {
-                        Desktop.getDesktop().browse(new URI(user.getType()));
-                    } catch (IOException | URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                setGraphic(link);
+            userLinkColumn.setRowCellFactory(user -> new PageRankTableCellWithHyperlink(GraphNode::getType) {{
+//                Hyperlink link = new Hyperlink(user.getType());
+//                link.setOnAction(event -> {
+//                    try {
+//                        Desktop.getDesktop().browse(new URI(user.getType()));
+//                    } catch (IOException | URISyntaxException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//                setGraphic(link);
             }});
 
             followersCountColumn.setRowCellFactory(user -> new MFXTableRowCell<>(GraphNode::getFollowersCount) {{
@@ -680,6 +698,24 @@ public class ScraperPageController implements Initializable {
         }
     }
 
+    public static class PageRankTableCellWithHyperlink extends MFXTableRowCell<GraphNode, String> {
+        public PageRankTableCellWithHyperlink(Function<GraphNode, String> extractor) {
+            super(extractor);
+        }
+
+        @Override
+        public void update(GraphNode user) {
+            Hyperlink link = new Hyperlink(user.getType());
+            link.setOnAction(event -> {
+                try {
+                    Desktop.getDesktop().browse(new URI(user.getType()));
+                } catch (IOException | URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            setGraphic(link);
+        }
+    }
 
     class runPageRankTask extends TaskVoid {
         @Override
