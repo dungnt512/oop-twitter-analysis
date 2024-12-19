@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="twitter.application.App" />
+    <module name="twitter-analysis" />
+    <option name="VM_PARAMETERS" value="--add-opens org.seleniumhq.selenium.api/org.openqa.selenium=com.google.gson" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="twitter.application.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
